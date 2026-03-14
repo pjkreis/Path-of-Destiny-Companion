@@ -27,7 +27,7 @@ const ELEVENLABS_VOICES = [
   { id: 'HAvvFKatz0uu0Fv55Riy', name: 'Elder Dragon'      },  // ← default
   { id: 'onwK4e9ZLuTAKqWW03F9', name: 'Daniel — deep'     },
   { id: 'N2lVS1w4EtoT3dr4eOWO', name: 'Callum — gritty'   },
-  { id: 'TX3LPaxmHKxFdv7VOQHJ', name: 'Liam — narrator'   },
+  { id: 'flHkNRp1BlvT73UL6gyz', name: 'Jessica — villain' },
   { id: 'XB0fDUnXU5powFXDhCwa', name: 'Charlotte — warm'  },
   // Add more voices here following the same pattern:
   // { id: 'VOICE_ID', name: 'Label in dropdown' },
@@ -472,8 +472,17 @@ const ELEVENLABS_VOICES = [
             line-height: 1.9;
             font-style: italic;
         }
-            /* Drop-cap first letter */
-            .chapter-body::first-letter {
+
+        .chapter-body p {
+            margin-bottom: 0.9em;
+        }
+
+        .chapter-body p:last-child {
+            margin-bottom: 0;
+        }
+
+            /* Drop-cap on first letter of first paragraph */
+            .chapter-body p:first-child::first-letter {
                 font-family: var(--font-display);
                 font-size: 3.8em;
                 font-weight: 700;
@@ -1448,7 +1457,10 @@ function goTo(id) {
 
   document.getElementById('eyebrow').textContent   = 'Chapter ' + (DEPTH_MAP[id] || 1) + ' of ' + TOTAL_STEPS;
   document.getElementById('story-title').textContent = s.title;
-  document.getElementById('story-text').textContent  = s.text;
+  document.getElementById('story-text').innerHTML = s.text
+    .split('\n\n')
+    .map(p => `<p>${p.replace(/\n/g, '<br>')}</p>`)
+    .join('');
 
   const iconWrap = document.getElementById('chapter-icon-wrap');
   const iconEl   = document.getElementById('chapter-icon');
