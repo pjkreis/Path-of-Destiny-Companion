@@ -1,612 +1,1428 @@
+<!--
+╔══════════════════════════════════════════════════════════════════════╗
+║                                                                      ║
+║   GAME COMPANION — SETUP                                             ║
+║                                                                      ║
+║   Configure your ElevenLabs voices here.                             ║
+║   The API key is entered by each user in the app itself —            ║
+║   it is saved in their browser and never stored in this file.        ║
+║                                                                      ║
+╚══════════════════════════════════════════════════════════════════════╝
+-->
+<script>// ════════════════════════════════════════════════════════════════════
+//  ELEVENLABS VOICES
+//
+//  The voices shown in the dropdown under "✦ ElevenLabs".
+//  The first entry in the list is selected by default.
+//
+//  HOW TO FIND A VOICE ID:
+//  → Go to elevenlabs.io → Voices → click any voice → the ID is in
+//    the URL:  elevenlabs.io/app/voice-lab/edit/VOICE_ID_HERE
+//
+//  id   → the Voice ID from ElevenLabs (string)
+//  name → the label shown in the dropdown (anything you like)
+// ════════════════════════════════════════════════════════════════════
+
+const ELEVENLABS_VOICES = [
+  { id: 'HAvvFKatz0uu0Fv55Riy', name: 'Elder Dragon'      },  // ← default
+  { id: 'onwK4e9ZLuTAKqWW03F9', name: 'Daniel — deep'     },
+  { id: 'N2lVS1w4EtoT3dr4eOWO', name: 'Callum — gritty'   },
+  { id: 'TX3LPaxmHKxFdv7VOQHJ', name: 'Liam — narrator'   },
+  { id: 'XB0fDUnXU5powFXDhCwa', name: 'Charlotte — warm'  },
+  // Add more voices here following the same pattern:
+  // { id: 'VOICE_ID', name: 'Label in dropdown' },
+];
+
+// ════════════════════════════════════════════════════════════════════
+//  That's it for setup. Scroll down to the TALES section to edit
+//  the story content.
+// ════════════════════════════════════════════════════════════════════</script>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Game Companion</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
-<style>
-  /* ============================================================
-     THEME & VARIABLES
-  ============================================================ */
-  :root {
-    --bg:        #0f0d0a;
-    --surface:   #1a1710;
-    --surface2:  #221f15;
-    --border:    #3a3520;
-    --border2:   #5a5030;
-    --gold:      #c9a84c;
-    --gold-dim:  #7a6230;
-    --text:      #e8dfc8;
-    --text-dim:  #9a8f78;
-    --text-faint:#5a5040;
-    --red:       #8b3a3a;
-    --font-title: 'Cinzel', serif;
-    --font-body:  'Lora', serif;
-  }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Companion</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Cinzel:wght@400;600&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+    <style>
+        /* ============================================================
+           THEME — Witcher rulebook palette
+           Dark leather bg · aged parchment panels · blood red accent
+        ============================================================ */
+        :root {
+            --bg: #12100c;
+            --leather: #1c1710;
+            --parchment: #e8dfc0;
+            --parchment2: #d4c9a4;
+            --parchment-dk: #bfb28a;
+            --panel: #241f14;
+            --panel2: #2e2718;
+            --red: #8b1a1a;
+            --red-bright: #b02020;
+            --red-dim: #5c1010;
+            --gold: #c4963a;
+            --gold-dim: #7a5c1e;
+            --gold-bright: #e0b050;
+            --ink: #1a1510;
+            --border-gold: #6a4e1a;
+            --border-red: #6a1a1a;
+            --text-on-dark: #cfc49e;
+            --text-dim: #8a7a58;
+            --text-faint: #4a4030;
+            --font-display: 'Cinzel Decorative', serif;
+            --font-title: 'Cinzel', serif;
+            --font-body: 'EB Garamond', serif;
+        }
 
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: var(--font-body);
-    font-size: 16px;
-    line-height: 1.75;
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    padding: 2rem 1rem 4rem;
-  }
+        body {
+            background: var(--bg);
+            color: var(--text-on-dark);
+            font-family: var(--font-body);
+            font-size: 17px;
+            line-height: 1.75;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            padding: 0 0 5rem;
+            /* Leather texture via layered SVG noise */
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='5' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.055'/%3E%3C/svg%3E");
+        }
 
-  /* Parchment noise texture overlay */
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image:
-      radial-gradient(ellipse 80% 60% at 50% 0%, #2a2210 0%, transparent 70%),
-      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
-    pointer-events: none;
-    z-index: 0;
-  }
+            /* Top vignette */
+            body::before {
+                content: '';
+                position: fixed;
+                inset: 0;
+                background: radial-gradient(ellipse 100% 40% at 50% 0%, #3a2a10 0%, transparent 60%), radial-gradient(ellipse 100% 30% at 50% 100%, #0a0806 0%, transparent 50%);
+                pointer-events: none;
+                z-index: 0;
+            }
 
-  #app {
-    position: relative;
-    z-index: 1;
-    width: 100%;
-    max-width: 680px;
-  }
+        #app {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 700px;
+        }
 
-  /* ============================================================
-     HEADER
-  ============================================================ */
-  .masthead {
-    text-align: center;
-    margin-bottom: 2.5rem;
-    padding-bottom: 1.5rem;
-    border-bottom: 1px solid var(--border);
-    position: relative;
-  }
-  .masthead::after {
-    content: '✦';
-    position: absolute;
-    bottom: -0.65rem;
-    left: 50%;
-    transform: translateX(-50%);
-    background: var(--bg);
-    padding: 0 0.75rem;
-    color: var(--gold-dim);
-    font-size: 13px;
-  }
-  .game-title {
-    font-family: var(--font-title);
-    font-size: clamp(20px, 5vw, 30px);
-    font-weight: 600;
-    letter-spacing: 0.15em;
-    color: var(--gold);
-    text-transform: uppercase;
-    margin-bottom: 0.25rem;
-  }
-  .game-subtitle {
-    font-size: 12px;
-    color: var(--text-faint);
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-  }
+        /* ============================================================
+           MASTHEAD — full-width banner like a chapter opener
+        ============================================================ */
+        .masthead {
+            text-align: center;
+            padding: 3rem 2rem 2rem;
+            margin-bottom: 0;
+            position: relative;
+            border-bottom: none;
+        }
+            /* Red stripe above title */
+            .masthead::before {
+                content: '';
+                display: block;
+                width: 80px;
+                height: 3px;
+                background: var(--red);
+                margin: 0 auto 1.4rem;
+            }
+        /* Ornate rule below subtitle */
+        .masthead-rule {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 1.4rem;
+            padding: 0 1rem;
+        }
 
-  /* ============================================================
-     PROGRESS
-  ============================================================ */
-  .progress-bar {
-    display: flex;
-    align-items: center;
-    gap: 0;
-    margin-bottom: 2rem;
-  }
-  .progress-step {
-    flex: 1;
-    height: 3px;
-    background: var(--border);
-    position: relative;
-    transition: background 0.4s;
-  }
-  .progress-step.done   { background: var(--gold-dim); }
-  .progress-step.active { background: var(--gold); }
-  .progress-step::after {
-    content: attr(data-num);
-    position: absolute;
-    top: -22px;
-    left: 50%;
-    transform: translateX(-50%);
-    font-family: var(--font-title);
-    font-size: 10px;
-    color: var(--text-faint);
-    letter-spacing: 0.1em;
-  }
-  .progress-step.done::after,
-  .progress-step.active::after { color: var(--gold); }
-  .progress-wrap {
-    padding-top: 28px;
-    margin-bottom: 2.5rem;
-  }
+            .masthead-rule::before,
+            .masthead-rule::after {
+                content: '';
+                flex: 1;
+                height: 1px;
+                background: linear-gradient(to right, transparent, var(--border-gold), transparent);
+            }
 
-  /* ============================================================
-     SCENARIO CARD
-  ============================================================ */
-  .scenario-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 2px;
-    padding: 2rem 2rem 1.75rem;
-    margin-bottom: 1.75rem;
-    position: relative;
-    /* corner ornaments */
-    box-shadow:
-      inset 0 0 40px rgba(0,0,0,0.4),
-      0 4px 24px rgba(0,0,0,0.6);
-  }
-  .scenario-card::before,
-  .scenario-card::after {
-    content: '';
-    position: absolute;
-    width: 18px;
-    height: 18px;
-    border-color: var(--gold-dim);
-    border-style: solid;
-  }
-  .scenario-card::before { top: 6px; left: 6px; border-width: 1px 0 0 1px; }
-  .scenario-card::after  { bottom: 6px; right: 6px; border-width: 0 1px 1px 0; }
+        .masthead-rule-diamond {
+            color: var(--gold);
+            font-size: 10px;
+        }
 
-  .scenario-eyebrow {
-    font-size: 10px;
-    letter-spacing: 0.25em;
-    text-transform: uppercase;
-    color: var(--gold-dim);
-    font-family: var(--font-title);
-    margin-bottom: 0.5rem;
-  }
+        .game-title {
+            font-family: var(--font-display);
+            font-size: clamp(22px, 6vw, 38px);
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            color: var(--gold-bright);
+            text-transform: uppercase;
+            line-height: 1.15;
+            margin-bottom: 0.4rem;
+            text-shadow: 0 0 40px rgba(180,120,20,0.4), 2px 2px 0 rgba(0,0,0,0.8);
+        }
 
-  .scenario-title {
-    font-family: var(--font-title);
-    font-size: clamp(18px, 4vw, 24px);
-    font-weight: 600;
-    color: var(--gold);
-    letter-spacing: 0.05em;
-    margin-bottom: 1.25rem;
-    line-height: 1.3;
-  }
+        .game-subtitle {
+            font-family: var(--font-title);
+            font-size: 11px;
+            color: var(--text-dim);
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+        }
 
-  .scenario-divider {
-    width: 60px;
-    height: 1px;
-    background: var(--border2);
-    margin-bottom: 1.25rem;
-  }
+        /* ============================================================
+           HOME SCREEN
+        ============================================================ */
+        #home-screen {
+            display: block;
+        }
 
-  .scenario-body {
-    color: var(--text);
-    font-size: 15px;
-    line-height: 1.85;
-    font-style: italic;
-  }
+        #play-screen {
+            display: none;
+        }
 
-  /* ============================================================
-     AUDIO CONTROLS
-  ============================================================ */
-  .audio-row {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 0.6rem;
-    margin-bottom: 2rem;
-  }
+        .home-intro {
+            text-align: center;
+            margin: 2rem 1.5rem 2rem;
+            font-size: 15px;
+            color: var(--text-dim);
+            font-style: italic;
+            letter-spacing: 0.02em;
+        }
 
-  .btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 7px;
-    border: 1px solid var(--border2);
-    border-radius: 2px;
-    background: transparent;
-    color: var(--text-dim);
-    font-family: var(--font-title);
-    font-size: 11px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    padding: 8px 16px;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-  .btn:hover:not(:disabled) {
-    border-color: var(--gold);
-    color: var(--gold);
-    background: rgba(201,168,76,0.07);
-  }
-  .btn:disabled { opacity: 0.3; cursor: not-allowed; }
-  .btn-read {
-    border-color: var(--gold-dim);
-    color: var(--gold);
-  }
-  .btn-read:hover:not(:disabled) {
-    background: rgba(201,168,76,0.12);
-  }
+        .tale-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+            gap: 1.25rem;
+            margin: 0 1rem 2rem;
+        }
 
-  .voice-select {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 2px;
-    color: var(--text-dim);
-    font-family: var(--font-body);
-    font-size: 12px;
-    padding: 7px 10px;
-    cursor: pointer;
-    max-width: 170px;
-    flex: 1;
-  }
-  .voice-select:focus { outline: none; border-color: var(--gold-dim); }
+        /* Parchment card with leather border */
+        .tale-card {
+            background: var(--parchment);
+            border: none;
+            border-radius: 1px;
+            padding: 0;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            position: relative;
+            text-align: left;
+            width: 100%;
+            box-shadow: 0 0 0 1px var(--border-gold), 0 0 0 4px var(--panel), 0 0 0 5px var(--border-gold), 0 6px 24px rgba(0,0,0,0.7);
+        }
 
-  .speaking-pill {
-    display: none;
-    align-items: center;
-    gap: 6px;
-    font-size: 11px;
-    color: var(--gold-dim);
-    font-family: var(--font-title);
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-  }
-  .speaking-pill.visible { display: flex; }
-  .bars {
-    display: flex;
-    align-items: flex-end;
-    gap: 2px;
-    height: 14px;
-  }
-  .bars span {
-    display: block;
-    width: 3px;
-    background: var(--gold-dim);
-    border-radius: 1px;
-    animation: bar 0.9s ease-in-out infinite;
-  }
-  .bars span:nth-child(1) { height: 5px;  animation-delay: 0s; }
-  .bars span:nth-child(2) { height: 10px; animation-delay: 0.15s; }
-  .bars span:nth-child(3) { height: 7px;  animation-delay: 0.3s; }
-  .bars span:nth-child(4) { height: 12px; animation-delay: 0.05s; }
-  .bars span:nth-child(5) { height: 4px;  animation-delay: 0.25s; }
-  @keyframes bar { 0%,100%{transform:scaleY(0.4)} 50%{transform:scaleY(1)} }
+            .tale-card:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 0 0 1px var(--gold), 0 0 0 4px var(--panel), 0 0 0 5px var(--gold), 0 10px 32px rgba(0,0,0,0.8);
+            }
+        /* Red top bar */
+        .tale-card-bar {
+            background: var(--red);
+            height: 6px;
+            width: 100%;
+        }
 
-  /* ============================================================
-     PATH CHOICES
-  ============================================================ */
-  .paths-heading {
-    font-family: var(--font-title);
-    font-size: 10px;
-    letter-spacing: 0.3em;
-    text-transform: uppercase;
-    color: var(--text-faint);
-    margin-bottom: 0.9rem;
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-  }
-  .paths-heading::before,
-  .paths-heading::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: var(--border);
-  }
+        .tale-card-body {
+            padding: 1.25rem 1.5rem 1.4rem;
+        }
 
-  .path-choice {
-    display: block;
-    width: 100%;
-    text-align: left;
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 2px;
-    padding: 1.1rem 1.25rem;
-    cursor: pointer;
-    margin-bottom: 0.75rem;
-    transition: all 0.2s;
-    position: relative;
-    overflow: hidden;
-  }
-  .path-choice::before {
-    content: '';
-    position: absolute;
-    left: 0; top: 0; bottom: 0;
-    width: 3px;
-    background: var(--gold-dim);
-    transform: scaleY(0);
-    transition: transform 0.2s;
-    transform-origin: bottom;
-  }
-  .path-choice:hover {
-    border-color: var(--gold-dim);
-    background: var(--surface);
-  }
-  .path-choice:hover::before { transform: scaleY(1); }
+        .tale-number {
+            font-family: var(--font-title);
+            font-size: 9px;
+            letter-spacing: 0.3em;
+            color: var(--red);
+            text-transform: uppercase;
+            margin-bottom: 0.35rem;
+        }
 
-  .path-inner {
-    display: flex;
-    align-items: flex-start;
-    gap: 1rem;
-  }
-  .path-letter {
-    font-family: var(--font-title);
-    font-size: 11px;
-    letter-spacing: 0.1em;
-    color: var(--gold);
-    border: 1px solid var(--gold-dim);
-    border-radius: 1px;
-    width: 26px;
-    height: 26px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    margin-top: 1px;
-  }
-  .path-text {
-    font-family: var(--font-body);
-    font-size: 14px;
-    color: var(--text-dim);
-    line-height: 1.6;
-    transition: color 0.2s;
-  }
-  .path-choice:hover .path-text { color: var(--text); }
+        .tale-title {
+            font-family: var(--font-title);
+            font-size: 17px;
+            font-weight: 600;
+            color: var(--ink);
+            letter-spacing: 0.03em;
+            line-height: 1.25;
+            margin-bottom: 0.6rem;
+        }
 
-  /* ============================================================
-     ENDING STATE
-  ============================================================ */
-  .ending-wrap {
-    text-align: center;
-    padding: 1.5rem 0 0.5rem;
-  }
-  .ending-ornament {
-    font-family: var(--font-title);
-    font-size: 11px;
-    letter-spacing: 0.3em;
-    text-transform: uppercase;
-    color: var(--gold-dim);
-    margin-bottom: 1.5rem;
-  }
-  .btn-restart {
-    border-color: var(--gold-dim);
-    color: var(--gold-dim);
-    font-size: 11px;
-    padding: 10px 24px;
-  }
-  .btn-restart:hover {
-    border-color: var(--gold);
-    color: var(--gold);
-    background: rgba(201,168,76,0.08);
-  }
+        .tale-description {
+            font-size: 14px;
+            color: #4a3e20;
+            line-height: 1.6;
+            font-style: italic;
+            border-top: 1px solid var(--parchment-dk);
+            padding-top: 0.6rem;
+            margin-top: 0.1rem;
+        }
 
-  /* ============================================================
-     COPY BUTTON (inside scenario card)
-  ============================================================ */
-  .copy-btn {
-    position: absolute;
-    top: 14px;
-    right: 14px;
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    background: transparent;
-    border: 1px solid var(--border);
-    border-radius: 2px;
-    color: var(--text-faint);
-    font-family: var(--font-title);
-    font-size: 9px;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    padding: 5px 10px;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-  .copy-btn:hover {
-    border-color: var(--gold-dim);
-    color: var(--gold-dim);
-  }
-  .copy-btn.copied {
-    border-color: var(--gold);
-    color: var(--gold);
-  }
-  .copy-btn svg {
-    width: 11px;
-    height: 11px;
-    flex-shrink: 0;
-  }
+        .tale-cover {
+            width: 52px;
+            height: 52px;
+            object-fit: contain;
+            float: right;
+            margin: 0 0 0.5rem 1rem;
+        }
 
-  /* ============================================================
-     FADE TRANSITION
-  ============================================================ */
-  .fade-enter { animation: fadeIn 0.5s ease forwards; }
-  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
-</style>
+        .tale-arrow {
+            display: inline-block;
+            margin-top: 1rem;
+            font-family: var(--font-title);
+            font-size: 9px;
+            letter-spacing: 0.25em;
+            color: var(--red);
+            text-transform: uppercase;
+            transition: letter-spacing 0.2s;
+        }
+
+        .tale-card:hover .tale-arrow {
+            letter-spacing: 0.35em;
+        }
+
+        /* ============================================================
+           IN-PLAY HEADER
+        ============================================================ */
+        .play-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.25rem 1.5rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border-gold);
+            gap: 1rem;
+        }
+
+        .play-tale-title {
+            font-family: var(--font-title);
+            font-size: clamp(13px, 3vw, 16px);
+            font-weight: 600;
+            color: var(--gold);
+            letter-spacing: 0.08em;
+            flex: 1;
+            min-width: 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            text-transform: uppercase;
+        }
+
+        .btn-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            border: 1px solid var(--border-gold);
+            border-radius: 1px;
+            background: transparent;
+            color: var(--text-dim);
+            font-family: var(--font-title);
+            font-size: 9px;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            padding: 7px 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+            .btn-back:hover {
+                border-color: var(--gold);
+                color: var(--gold);
+            }
+
+        /* ============================================================
+           PROGRESS — chapter ticks like a manuscript page counter
+        ============================================================ */
+        .progress-wrap {
+            padding: 0 1.5rem;
+            padding-top: 8px;
+            margin-bottom: 2rem;
+        }
+
+        .progress-bar {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 0;
+        }
+
+        .progress-step {
+            flex: 1;
+            height: 4px;
+            background: var(--panel2);
+            border: 1px solid var(--border-gold);
+            position: relative;
+            transition: background 0.4s, border-color 0.4s;
+        }
+
+            .progress-step.done {
+                background: var(--gold-dim);
+                border-color: var(--gold-dim);
+            }
+
+            .progress-step.active {
+                background: var(--red);
+                border-color: var(--red);
+            }
+
+            .progress-step::after {
+                content: attr(data-num);
+                position: absolute;
+                top: -20px;
+                left: 50%;
+                transform: translateX(-50%);
+                font-family: var(--font-title);
+                font-size: 9px;
+                color: var(--text-faint);
+                letter-spacing: 0.1em;
+            }
+
+            .progress-step.done::after {
+                color: var(--gold-dim);
+            }
+
+            .progress-step.active::after {
+                color: var(--red);
+            }
+
+        /* ============================================================
+           CHAPTER CARD — aged parchment panel
+        ============================================================ */
+        .chapter-card {
+            background: var(--parchment);
+            border: none;
+            border-radius: 1px;
+            margin: 0 1rem 1.5rem;
+            position: relative;
+            box-shadow: 0 0 0 1px var(--border-gold), 0 0 0 5px var(--panel), 0 0 0 6px var(--border-gold), 0 8px 32px rgba(0,0,0,0.8);
+        }
+        /* Red chapter bar */
+        .chapter-card-bar {
+            background: var(--red);
+            height: 7px;
+            border-radius: 1px 1px 0 0;
+        }
+
+        .chapter-card-inner {
+            padding: 1.75rem 2rem 1.75rem;
+        }
+
+        .chapter-eyebrow {
+            font-family: var(--font-title);
+            font-size: 9px;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: var(--red);
+            margin-bottom: 0.4rem;
+        }
+
+        .chapter-title {
+            font-family: var(--font-title);
+            font-size: clamp(18px, 4vw, 26px);
+            font-weight: 600;
+            color: var(--ink);
+            letter-spacing: 0.04em;
+            margin-bottom: 0;
+            line-height: 1.2;
+        }
+
+        /* Woodcut-style ornamental divider */
+        .chapter-divider {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            margin: 1rem 0;
+        }
+
+            .chapter-divider::before,
+            .chapter-divider::after {
+                content: '';
+                flex: 1;
+                height: 1px;
+                background: var(--parchment-dk);
+            }
+
+        .chapter-divider-glyph {
+            color: var(--red);
+            font-size: 11px;
+            font-family: var(--font-title);
+            letter-spacing: 0.15em;
+        }
+
+        .chapter-icon-wrap {
+            display: flex;
+            justify-content: center;
+            margin: 0.25rem 0 1rem;
+        }
+
+        .chapter-icon-wrap svg {
+            width: 80px;
+            height: 80px;
+            color: var(--red-dim);
+            opacity: 0.85;
+            filter: drop-shadow(0 1px 2px rgba(0,0,0,0.2));
+        }
+
+        .chapter-body {
+            color: #2a2010;
+            font-size: 16px;
+            line-height: 1.9;
+            font-style: italic;
+        }
+            /* Drop-cap first letter */
+            .chapter-body::first-letter {
+                font-family: var(--font-display);
+                font-size: 3.8em;
+                font-weight: 700;
+                color: var(--red);
+                float: left;
+                line-height: 0.75;
+                margin: 0.08em 0.08em 0 0;
+                text-shadow: 1px 1px 0 rgba(0,0,0,0.15);
+            }
+
+        /* Copy button — sits on parchment */
+        .copy-btn {
+            position: absolute;
+            top: 18px;
+            right: 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: rgba(255,255,255,0.3);
+            border: 1px solid var(--parchment-dk);
+            border-radius: 1px;
+            color: var(--text-faint);
+            font-family: var(--font-title);
+            font-size: 8px;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            padding: 4px 9px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+            .copy-btn:hover {
+                border-color: var(--red-dim);
+                color: var(--red);
+            }
+
+            .copy-btn.copied {
+                border-color: var(--red);
+                color: var(--red);
+            }
+
+            .copy-btn svg {
+                width: 10px;
+                height: 10px;
+                flex-shrink: 0;
+            }
+
+        /* ============================================================
+           AUDIO CONTROLS — dark bar below the card
+        ============================================================ */
+        .audio-row {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin: 0 1rem 1.75rem;
+            padding: 0.75rem 1rem;
+            background: var(--panel);
+            border: 1px solid var(--border-gold);
+            border-top: none;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            border: 1px solid var(--border-gold);
+            border-radius: 1px;
+            background: transparent;
+            color: var(--text-dim);
+            font-family: var(--font-title);
+            font-size: 10px;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            padding: 7px 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+            .btn:hover:not(:disabled) {
+                border-color: var(--gold);
+                color: var(--gold);
+                background: rgba(180,120,20,0.08);
+            }
+
+            .btn:disabled {
+                opacity: 0.25;
+                cursor: not-allowed;
+            }
+
+        .btn-read {
+            border-color: var(--red-dim);
+            color: var(--gold);
+            background: rgba(100,10,10,0.2);
+        }
+
+            .btn-read:hover:not(:disabled) {
+                border-color: var(--red);
+                background: rgba(120,10,10,0.35);
+                color: var(--gold-bright);
+            }
+
+        .voice-select {
+            background: var(--panel2);
+            border: 1px solid var(--border-gold);
+            border-radius: 1px;
+            color: var(--text-dim);
+            font-family: var(--font-body);
+            font-size: 13px;
+            padding: 6px 10px;
+            cursor: pointer;
+            max-width: 170px;
+            flex: 1;
+        }
+
+            .voice-select:focus {
+                outline: none;
+                border-color: var(--gold);
+            }
+
+        .speaking-pill {
+            display: none;
+            align-items: center;
+            gap: 6px;
+            font-size: 10px;
+            color: var(--gold-dim);
+            font-family: var(--font-title);
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+        }
+
+            .speaking-pill.visible {
+                display: flex;
+            }
+
+        .bars {
+            display: flex;
+            align-items: flex-end;
+            gap: 2px;
+            height: 13px;
+        }
+
+            .bars span {
+                display: block;
+                width: 3px;
+                background: var(--gold-dim);
+                border-radius: 1px;
+                animation: bar 0.9s ease-in-out infinite;
+            }
+
+                .bars span:nth-child(1) {
+                    height: 4px;
+                    animation-delay: 0s;
+                }
+
+                .bars span:nth-child(2) {
+                    height: 9px;
+                    animation-delay: 0.15s;
+                }
+
+                .bars span:nth-child(3) {
+                    height: 6px;
+                    animation-delay: 0.3s;
+                }
+
+                .bars span:nth-child(4) {
+                    height: 11px;
+                    animation-delay: 0.05s;
+                }
+
+                .bars span:nth-child(5) {
+                    height: 4px;
+                    animation-delay: 0.25s;
+                }
+
+        @keyframes bar {
+            0%,100% {
+                transform: scaleY(0.4)
+            }
+
+            50% {
+                transform: scaleY(1)
+            }
+        }
+
+        /* ============================================================
+           PATH CHOICES — parchment buttons with red left border
+        ============================================================ */
+        .paths-section {
+            margin: 0 1rem;
+        }
+
+        .paths-heading {
+            font-family: var(--font-title);
+            font-size: 9px;
+            letter-spacing: 0.35em;
+            text-transform: uppercase;
+            color: var(--text-dim);
+            margin-bottom: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+            .paths-heading::before,
+            .paths-heading::after {
+                content: '';
+                flex: 1;
+                height: 1px;
+                background: var(--border-gold);
+            }
+
+        .path-choice {
+            display: block;
+            width: 100%;
+            text-align: left;
+            background: var(--parchment);
+            border: none;
+            border-left: 5px solid var(--red-dim);
+            border-radius: 1px;
+            padding: 0.95rem 1.25rem;
+            cursor: pointer;
+            margin-bottom: 0.75rem;
+            transition: all 0.2s;
+            position: relative;
+            box-shadow: 0 0 0 1px var(--border-gold), 2px 3px 10px rgba(0,0,0,0.5);
+        }
+
+            .path-choice:hover {
+                border-left-color: var(--red);
+                box-shadow: 0 0 0 1px var(--gold), 3px 4px 14px rgba(0,0,0,0.6);
+                transform: translateX(2px);
+            }
+
+        .path-inner {
+            display: flex;
+            align-items: center;
+            gap: 0.9rem;
+        }
+
+        .path-letter {
+            font-family: var(--font-display);
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--red);
+            flex-shrink: 0;
+            width: 22px;
+            text-align: center;
+        }
+
+        .path-icon {
+            width: 42px;
+            height: 42px;
+            flex-shrink: 0;
+            color: var(--red-dim);
+            opacity: 0.8;
+            transition: opacity 0.2s, color 0.2s;
+        }
+
+        .path-choice:hover .path-icon {
+            opacity: 1;
+            color: var(--red);
+        }
+
+        .path-text {
+            font-family: var(--font-body);
+            font-size: 15px;
+            color: #2a2010;
+            line-height: 1.5;
+            font-style: italic;
+        }
+
+        /* ============================================================
+           ENDING STATE
+        ============================================================ */
+        .ending-wrap {
+            text-align: center;
+            padding: 2rem 0 1rem;
+        }
+
+        .ending-ornament {
+            font-family: var(--font-title);
+            font-size: 10px;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: var(--text-dim);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+            .ending-ornament::before,
+            .ending-ornament::after {
+                content: '';
+                flex: 1;
+                height: 1px;
+                background: var(--border-gold);
+            }
+
+        .ending-buttons {
+            display: flex;
+            gap: 0.75rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-restart {
+            border-color: var(--red-dim);
+            color: var(--gold);
+            background: rgba(80,10,10,0.25);
+            padding: 10px 24px;
+        }
+
+            .btn-restart:hover {
+                border-color: var(--red);
+                color: var(--gold-bright);
+                background: rgba(110,10,10,0.4);
+            }
+
+        .btn-home {
+            padding: 10px 24px;
+        }
+
+        /* ============================================================
+           ELEVENLABS BADGE
+        ============================================================ */
+        .el-badge {
+            font-family: var(--font-title);
+            font-size: 8px;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--gold-dim);
+            border: 1px solid var(--border-gold);
+            border-radius: 1px;
+            padding: 2px 7px;
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+            .el-badge.visible {
+                opacity: 1;
+            }
+
+            .el-badge.loading {
+                color: var(--red);
+                border-color: var(--border-red);
+            }
+
+            .el-badge.error {
+                color: #8b4444;
+                border-color: #6a3333;
+            }
+
+        .home-footer {
+            display: flex;
+            justify-content: center;
+            padding: 0.5rem 1rem 2rem;
+        }
+
+        .btn-el-voices {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: var(--font-title);
+            font-size: 10px;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--text-dim);
+            background: transparent;
+            border: 1px solid var(--border-gold);
+            border-radius: 1px;
+            padding: 10px 22px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-el-voices svg {
+            width: 14px;
+            height: 14px;
+            flex-shrink: 0;
+        }
+
+        .btn-el-voices:hover {
+            border-color: var(--gold);
+            color: var(--gold);
+            background: rgba(180,120,20,0.06);
+        }
+
+        /* ============================================================
+           API KEY MODAL
+        ============================================================ */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.75);
+            z-index: 100;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+        }
+        .modal-overlay.visible { display: flex; }
+
+        .modal {
+            background: var(--parchment);
+            border: none;
+            border-radius: 1px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 0 0 1px var(--border-gold), 0 0 0 5px var(--panel), 0 0 0 6px var(--border-gold), 0 16px 48px rgba(0,0,0,0.9);
+        }
+        .modal-bar { background: var(--red); height: 6px; border-radius: 1px 1px 0 0; }
+        .modal-body { padding: 1.75rem 1.75rem 1.5rem; }
+
+        .modal-title {
+            font-family: var(--font-title);
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--ink);
+            letter-spacing: 0.04em;
+            margin-bottom: 0.5rem;
+        }
+        .modal-desc {
+            font-family: var(--font-body);
+            font-size: 13px;
+            color: #4a3e20;
+            line-height: 1.6;
+            font-style: italic;
+            margin-bottom: 1.25rem;
+        }
+        .modal-desc a { color: var(--red); }
+
+        .modal-input {
+            width: 100%;
+            font-family: var(--font-body);
+            font-size: 13px;
+            padding: 9px 12px;
+            border: 1px solid var(--parchment-dk);
+            border-radius: 1px;
+            background: rgba(255,255,255,0.5);
+            color: var(--ink);
+            margin-bottom: 1rem;
+            letter-spacing: 0.04em;
+        }
+        .modal-input:focus { outline: none; border-color: var(--red-dim); }
+
+        .modal-actions { display: flex; gap: 0.6rem; justify-content: flex-end; flex-wrap: wrap; }
+        .modal-btn {
+            font-family: var(--font-title);
+            font-size: 9px;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            padding: 8px 18px;
+            border-radius: 1px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid var(--border-gold);
+            background: transparent;
+            color: var(--text-faint);
+        }
+        .modal-btn:hover { border-color: var(--gold); color: #4a3e20; }
+        .modal-btn-primary {
+            background: var(--red-dim);
+            border-color: var(--red-dim);
+            color: var(--parchment);
+        }
+        .modal-btn-primary:hover { background: var(--red); border-color: var(--red); color: var(--parchment); }
+        .modal-btn-clear { color: #8b4444; border-color: #c4a090; }
+        .modal-btn-clear:hover { border-color: #8b4444; background: rgba(139,58,58,0.08); }
+        .modal-hint {
+            font-family: var(--font-title);
+            font-size: 8px;
+            letter-spacing: 0.1em;
+            color: #7a6a50;
+            margin-top: 0.85rem;
+            text-align: center;
+        }
+
+        /* Settings gear button in audio row */
+        .btn-settings {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px; height: 32px;
+            border: 1px solid var(--border-gold);
+            border-radius: 1px;
+            background: transparent;
+            color: var(--text-dim);
+            cursor: pointer;
+            transition: all 0.2s;
+            flex-shrink: 0;
+            padding: 0;
+        }
+        .btn-settings:hover { border-color: var(--gold); color: var(--gold); }
+        .btn-settings svg { width: 14px; height: 14px; }
+
+        /* ============================================================
+           TRANSITIONS
+        ============================================================ */
+        .fade-enter {
+            animation: fadeIn 0.45s ease forwards;
+        }
+
+        .fade-up {
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: none;
+            }
+        }
+    </style>
 </head>
 <body>
-<div id="app">
+    <div id="app">
 
-  <div class="masthead">
-    <!-- ═══════════════════════════════════════════════════════
-         EDIT THIS: Change the title to your game's name
-    ═══════════════════════════════════════════════════════ -->
-    <div class="game-title">Paths of Destiny</div>
-    <div class="game-subtitle">Adventure Companion</div>
-  </div>
+        <!-- Shared masthead -->
+        <div class="masthead">
+            <!-- ═══════════════════════════════════════════════════
+                 Path of Destiny Narrator Companion
+            ═══════════════════════════════════════════════════ -->
+            <div class="game-title">Path of Destiny</div>
+            <div class="game-subtitle">Narrator Companion</div>
+            <div class="masthead-rule"><span class="masthead-rule-diamond">✦ ✦ ✦</span></div>
+        </div>
 
-  <div class="progress-wrap">
-    <div class="progress-bar" id="progress-bar"></div>
-  </div>
+        <!-- HOME SCREEN -->
+        <div id="home-screen">
+            <p class="home-intro">Choose a tale to begin.</p>
+            <div class="tale-grid" id="tale-grid"></div>
+            <div class="home-footer">
+                <button class="btn-el-voices" onclick="openKeyModal()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 2c0 0-6 6-6 12a6 6 0 0 0 12 0c0-3-2-5-2-5 0 2-1 3-2 3.5C14 10 12 2 12 2z"/>
+                        <path d="M12 22c-1.5-1-3-3-3-5 0-1.5 1-3 2-3.5"/>
+                    </svg>
+                    ElevenLabs Voices
+                </button>
+            </div>
+        </div>
 
-  <div class="scenario-card fade-enter" id="scenario-card">
-    <button class="copy-btn" id="copy-btn" onclick="copyText()" title="Copy scenario text to clipboard">
-      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-        <rect x="5" y="5" width="9" height="10" rx="1.5"/>
-        <path d="M11 5V3.5A1.5 1.5 0 0 0 9.5 2H3.5A1.5 1.5 0 0 0 2 3.5v6A1.5 1.5 0 0 0 3.5 11H5"/>
-      </svg>
-      <span id="copy-label">Copy</span>
-    </button>
-    <div class="scenario-eyebrow" id="eyebrow">Scenario 1</div>
-    <div class="scenario-title" id="story-title"></div>
-    <div class="scenario-divider"></div>
-    <div class="scenario-body" id="story-text"></div>
-  </div>
+        <!-- PLAY SCREEN -->
+        <div id="play-screen">
 
-  <div class="audio-row">
-    <button class="btn btn-read" id="read-btn" onclick="readAloud()">▶ Read Aloud</button>
-    <button class="btn" id="stop-btn" onclick="stopReading()" disabled>■ Stop</button>
-    <select class="voice-select" id="voice-select" onchange="voiceChanged()"></select>
-    <div class="speaking-pill" id="speaking-pill">
-      <div class="bars"><span></span><span></span><span></span><span></span><span></span></div>
-      Narrating
+            <div class="play-header">
+                <div class="play-tale-title" id="play-tale-title"></div>
+                <button class="btn-back" onclick="goHome()">← All Tales</button>
+            </div>
+
+            <div class="progress-wrap">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+
+            <div class="chapter-card fade-enter" id="chapter-card">
+                <div class="chapter-card-bar"></div>
+                <div class="chapter-card-inner">
+                    <button class="copy-btn" id="copy-btn" onclick="copyText()" title="Copy chapter text to clipboard">
+                        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="5" y="5" width="9" height="10" rx="1.5" />
+                            <path d="M11 5V3.5A1.5 1.5 0 0 0 9.5 2H3.5A1.5 1.5 0 0 0 2 3.5v6A1.5 1.5 0 0 0 3.5 11H5" />
+                        </svg>
+                        <span id="copy-label">Copy</span>
+                    </button>
+                    <div class="chapter-eyebrow" id="eyebrow">chapter 1</div>
+                    <div class="chapter-title" id="story-title"></div>
+                    <div class="chapter-divider"><span class="chapter-divider-glyph">— ✦ —</span></div>
+                    <div class="chapter-icon-wrap" id="chapter-icon-wrap" style="display:none">
+                        <span id="chapter-icon"></span>
+                    </div>
+                    <div class="chapter-body" id="story-text"></div>
+                </div>
+            </div>
+
+            <div class="audio-row">
+                <button class="btn btn-read" id="read-btn" onclick="readAloud()">▶ Read Aloud</button>
+                <button class="btn" id="stop-btn" onclick="stopReading()" disabled>■ Stop</button>
+                <select class="voice-select" id="voice-select" onchange="voiceChanged()"></select>
+                <button class="btn-settings" onclick="openKeyModal()" title="ElevenLabs API key settings">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="3"/>
+                        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                    </svg>
+                </button>
+                <span class="el-badge" id="el-badge">ElevenLabs</span>
+                <div class="speaking-pill" id="speaking-pill">
+                    <div class="bars"><span></span><span></span><span></span><span></span><span></span></div>
+                    Narrating
+                </div>
+            </div>
+
+            <div id="paths-section" class="paths-section"></div>
+
+        </div><!-- /play-screen -->
+
+    </div><!-- /app -->
+
+    <!-- API KEY MODAL -->
+    <div class="modal-overlay" id="key-modal">
+        <div class="modal">
+            <div class="modal-bar"></div>
+            <div class="modal-body">
+                <div class="modal-title">ElevenLabs API Key</div>
+                <div class="modal-desc">
+                    Enter your key to unlock high-quality narration voices.
+                    Get one free at <a href="https://elevenlabs.io" target="_blank">elevenlabs.io</a>
+                    → Profile → API Key.<br><br>
+                    Your key is saved only in this browser and never shared.
+                </div>
+                <input class="modal-input" id="key-input" type="password"
+                    placeholder="sk_xxxxxxxxxxxxxxxxxxxxxxxx" autocomplete="off" spellcheck="false">
+                <div class="modal-actions">
+                    <button class="modal-btn modal-btn-clear" id="key-clear-btn" onclick="clearKey()" style="display:none">Remove key</button>
+                    <button class="modal-btn" onclick="closeKeyModal()">Cancel</button>
+                    <button class="modal-btn modal-btn-primary" onclick="saveKey()">Save</button>
+                </div>
+                <div class="modal-hint">Leave blank to use browser voices only</div>
+            </div>
+        </div>
     </div>
-  </div>
 
-  <div id="paths-section"></div>
+    <script>
+// ╔══════════════════════════════════════════════════════════════════╗
+// ║                                                                  ║
+// ║   GAME COMPANION — TALES                                         ║
+// ║                                                                  ║
+// ║   Add your story content here. The app and API settings          ║
+// ║   are configured at the very top of this file.                   ║
+// ║                                                                  ║
+// ║   QUICK START                                                    ║
+// ║   ─────────────────────────────────────────────────────────────  ║
+// ║   1. Each tale is one block inside the  tales = [ ... ]  list.   ║
+// ║   2. To add a tale: copy the Tale 2 template block, paste it     ║
+// ║      after the last tale (add a comma between them), change      ║
+// ║      the id to 'tale3', and fill in your titles and text.        ║
+// ║   3. Icons are optional. Use: 'sword' 'letter' 'fire' 'map'      ║
+// ║                                                                  ║
+// ║   TALE FIELDS                                                    ║
+// ║   ─────────────────────────────────────────────────────────────  ║
+// ║   id          unique key, no spaces  (e.g. 'tale3')              ║
+// ║   title       name shown on the home screen card                 ║
+// ║   description one-line summary shown on the home card (optional) ║
+// ║   cover       image filename for the home card  (optional)       ║
+// ║                                                                  ║
+// ║   CHAPTER FIELDS (inside each tale's  chapters: { } )            ║
+// ║   ─────────────────────────────────────────────────────────────  ║
+// ║   title       chapter heading                                    ║
+// ║   text        story text — this is what gets read aloud          ║
+// ║   icon        icon shown on the chapter card  (optional)         ║
+// ║               use one of: 'sword' 'letter' 'fire' 'map'          ║
+// ║   paths       the two choices: [ { icon, label, next }, ... ]    ║
+// ║               icon uses the same keywords as above (optional)    ║
+// ║   isEnding    add  isEnding: true  on the two final chapters     ║
+// ║                                                                  ║
+// ║                                                                  ║
+// ╚══════════════════════════════════════════════════════════════════╝
 
-</div>
+const tales = [
 
-<script>
-// ================================================================
-//  ★  YOUR STORY GOES HERE  ★
-//
-//  HOW TO EDIT:
-//  1. Each scenario has an "id" (don't change these — they link things together)
-//  2. Change the "title" to the name of the scenario
-//  3. Change the "text" to the story text that will be read aloud
-//  4. For middle scenarios: change the "label" of each path (what the button says)
-//     and make sure "next" points to the correct scenario id
-//  5. The two final scenarios have isEnding: true — just change title and text
-//
-//  STRUCTURE:
-//    start → (path A) → a1 → (path A) → a2a → (path A) → final_a
-//                           → (path B) → a2b ↗
-//           → (path B) → b1 → (path A) → b2a ↗
-//                           → (path B) → b2b → (path A) → final_a
-//                                             → (path B) → final_b
-//
-//  Both final branches can lead to either final_a or final_b — your choice.
-// ================================================================
+  // ╔═════════════════════════════════╗
+  // ║  TALE 1: The Edge of the World  ║
+  // ╚═════════════════════════════════╝
+  {
+    id: 'tale1',
+    title: 'The Edge of the World',
+    description: 'The residents of Lower Posada are terrorized by a deovel. It\'s time to straighten things out.',
+    chapters: {
 
-const scenarios = {
+      // ── CHAPTER 1 (page 2) ──────────────────────────────────
+      p2: {
+        id: 'p2',
+        title: 'Chapter 1',
+        text: 'For the past few days, you\'ve been travelling along the route in The Valley of Flowers, listening to the clatter of wheels and your own thoughts. So, when you hear somebody call you from behind, you gladly come to a halt. A break from the monotony of the journey is always welcome.\n\nThe bearded peasant who catches up with you introduces himself as Nettly.\n\n"My village, Lower Posada, is being terrorized by a damn deovel" Nettly says bluntly. "I thought that company like yours could help us."\n\nOn your way to the village, he tells you about the beast that roams their fields day after day.\n\n"It destroys crops, pollutes water in the well, and steals oats from the granaries," Nettly lists. "But most of all, it demands food in return for peace and quiet!\'\n\nEven though you cannot believe that creatures such as deovels are anything more than a figment of human imagination, you quickly realize that the nerves of the residents of the Lower Posada are on edge. And when superstitions and agitation come into play, pitchforks and torches usually follow. But rarely is it right, and even less often just. Well, apparently before you leave this place, known as the Edge of the World, you will have to straighten this problem out.\n\nNettly leads you to Dhun, the elder of the village.\n\n"We are surrounded by fields of hemp, hops, and linen, which you must have passed," says Dhun. "That\'s the deovel\'s territory. Go there."\n\nWhen you reach the place, your attention is drawn to a large stone on which several clay bowls and a tallow candle, now almost entirely burnt, have been placed. Among the dishes, you find corn and beans, as well as other seeds and grains. You begin to think that all this was used by the villagers to make an offering to the deovel.\n\nAll of a sudden, from behind your back, the sound of scampering and a menacing growling reach your ears. Something is approaching you!\n\nThe deovel itself jumps out at you from the thicket of the field. It\'s the strangest looking creature you have ever seen – horned, with a furry tail and split hooves. It starts to jump around you, and its sinister roars blend into one with your profanities.',
+        paths: [
+          { icon: 'sword',  label: 'Instinctively, you reach for your weapons to prevent the creature from getting too close to you.', next: 'p6' },
+          { icon: 'letter', label: 'At the same time, you try to talk over its roars.', next: 'p10' }
+        ]
+      },
 
-  // ── SCENARIO 1 (the opening) ──────────────────────────────────
-  start: {
-    id: 'start',
-    title: 'The Awakening',             // ← Edit me
-    text: 'You open your eyes in a dimly lit stone chamber. The air is heavy with the scent of old books and candle wax. A cloaked figure stands at the far end of the room, their back turned to you. On the table beside you lies an ancient map — and a loaded crossbow. You hear distant shouts growing louder. The figure begins to turn...',  // ← Edit me
-    paths: [
-      { label: 'Grab the crossbow and demand answers', next: 'a1' },   // ← Edit label
-      { label: 'Seize the map and flee through the side door', next: 'b1' }  // ← Edit label
-    ]
-  },
+      // ── CHAPTER 2 (page 6) ──────────────────────────────────
+      p6: {
+        id: 'p6',
+        title: 'Chapter 2',
+        text: 'The deovel turns out to be a sylvan – half human, half goat – indeed malicious, but by no means bloodthirsty. However, it is in a fighting mood and starts hurling iron balls at you.\n\nYou manage to fend it off, but one of you decides to run after it through the field with particular determination. The sylvan seems to know perfectly well which direction to run in. Does it have its hideout there?\n\nThe person from your party who has tried the hardest to communicate with the sylvan points out that the beast referred to itself in the plural form, thus revealing that it does not act alone. This area is called the Edge of the World because there are no humans beyond it. There are elves living in the nearby mountains. They were driven away from here a few generations ago. Could the sylvan be cooperating with them?\n\nYou feel that it\'s too early to pay the sylvan a visit. First, you decide to confirm your suspicions.',
+        paths: [
+          { icon: 'fire', label: 'The gifts left on the stone look like offerings – you examine them carefully to understand what the villagers wanted to achieve here.', next: 'p14' },
+          { icon: 'map',  label: 'You look around the area in search of anything that could prove your suspicions that the sylvan is not the only non-human visitor here.', next: 'p18' }
+        ]
+      },
 
-  // ── SCENARIO 2A ───────────────────────────────────────────────
-  a1: {
-    id: 'a1',
-    title: 'Confrontation',             // ← Edit me
-    text: 'You snatch the crossbow and level it at the figure, who slowly raises their hands and turns to reveal a weathered face with kind eyes. "Put that down, friend," she says calmly. "I am the one who saved you." She explains that a powerful warlord seeks the artifact buried beneath the city — and only you carry the bloodline to destroy it. Outside, the shouts turn to screams.',  // ← Edit me
-    paths: [
-      { label: 'Trust her and follow her plan', next: 'a2a' },
-      { label: 'Demand she prove herself first', next: 'a2b' }
-    ]
-  },
+      // ── CHAPTER 3 (page 10) ─────────────────────────────────
+      p10: {
+        id: 'p10',
+        title: 'Chapter 3',
+        text: 'The deovel\'s not so black as it is painted. This one, in fact, turns out to be a sylvan – indeed malicious – but by no means bloodthirsty. Even though it is in a fighting mood and persistently hurls iron balls at you, you manage to establish some kind of understanding with it.\n\nOne of you makes out a few coherent sentences from among all the swearing and roaring, from which you learn that the villagers did try to perform a magical ritual here to drive the beast away, relying on clues from – as the sylvan called it – the book of the wizened crone.\n\nAs one of you won\'t let the creature that tried to hit you with iron balls off the hook, they charge at the sylvan to drive it away. The beast immediately retreats. By following its tracks, you discover the rough location of its hiding place. The person who charged at it before is now rubbing their hands in anticipation of getting revenge at last.\n\nYou feel that the residents of Lower Posada did not tell you everything. You come back to the village with a view to make sense of the situation. Dhun and Nettly reluctantly admit that they searched for answers to the problems with the deovel in an old book – the possession of an elderly healer and her silent apprentice named Lille.',
+        paths: [
+          { icon: 'map',  label: 'You are pressed for time, but now that you know the way to the sylvan\'s hideout you quickly devise a plan which will allow you to get there unnoticed.', next: 'p22' },
+          { icon: 'fire', label: 'To avoid further surprises, you also devote some time to talk to the healer and study the book which the sylvan told you about.', next: 'p26' }
+        ]
+      },
 
-  // ── SCENARIO 2B ───────────────────────────────────────────────
-  b1: {
-    id: 'b1',
-    title: 'Flight',                    // ← Edit me
-    text: 'You grab the map and burst through the side door into a narrow alleyway. Behind you the door splinters open. You run — twisting through market stalls, vaulting barrels — until you duck into a stable. A young stablehand stares at you. The map glows faintly in your hands, a pulsing route pointing toward the old cathedral on the hill. You can hear armored boots on cobblestones.',  // ← Edit me
-    paths: [
-      { label: 'Trust the map and head for the cathedral', next: 'b2a' },
-      { label: 'Hide with the stablehand and wait for dark', next: 'b2b' }
-    ]
-  },
+      // ── CHAPTER 3 (page 14) ─────────────────────────────────
+      p14: {
+        id: 'p14',
+        title: 'Chapter 3',
+        text: 'A careful examination of the latest offering confirms your belief that the villagers tried to perform a ritual to get rid of the sylvan. One of you, having made sure it is safe, tastes the honey-coated grains and has an epiphany. These crops and agricultural produce are indeed the leftovers from an offering. These gifts were supposed to humor the uninvited guest, which proves that people do not want to bring about bloodshed.\n\nSearching the area, you come across some very distinctive traces. One of you notices some grains next to the trace. Could it be that the sylvan is feeding and hiding the elves?\n\nA little wiser than yesterday, you decide to follow the beast, hoping to reach its hideout. Suddenly, from a distance, you spot two elves and decide to observe them for a while. Since they are armed, instead of rushing at them blindly, you take some time to discuss your next steps.',
+        paths: [
+          { icon: 'map',    label: 'You study the maps and delve into the depths of your memory to find the place where the sylvan and the elves could go, for the benefit of the residents of Lower Posada and your own.', next: 'p30' },
+          { icon: 'letter', label: 'You also try to think of other arguments which could convince the sylvan and the elves to leave this place.', next: 'p32' }
+        ]
+      },
 
-  // ── SCENARIO 3A ───────────────────────────────────────────────
-  a2a: {
-    id: 'a2a',
-    title: 'The Vault',                 // ← Edit me
-    text: 'The woman leads you through a passage hidden behind a bookshelf, down into a vault glowing with soft amber light. In the center floats a crystalline shard — the artifact. "Shatter it," she urges, "and the warlord loses his power forever." You feel a strange warmth in your chest as you reach out. But the shard whispers to you... offering something else.',  // ← Edit me
-    paths: [
-      { label: 'Shatter the artifact as instructed', next: 'final_a' },
-      { label: 'Listen to what the shard offers', next: 'final_b' }
-    ]
-  },
+      // ── CHAPTER 4 (page 18) ─────────────────────────────────
+      p18: {
+        id: 'p18',
+        title: 'Chapter 4',
+        text: 'If you didn\'t know what you are looking for, you would most definitely overlook it. However, thanks to your persistence, you finally encounter traces of the presence of the elves. And not only that! One of you even stumbles upon an elf itself. They watch the little creature, hiding in the hemp. They notice it is armored. With this knowledge, they are one step ahead in case of a confrontation.\n\nThe examination of the sacrificial altar also brings certain results. While everyone else is focused on the clay bowls, one of you is intrigued by the metal balls the sylvan attacked you with. They are man-made – those who made them might have heard that adding them to the beast\'s food may be a good way to kill it. If that was the case, the beast may have a whole supply of the balls. This knowledge will allow for better preparation for the battle.\n\nFinally, you are on your way to the sylvan\'s hideout. The goat is sitting by the fire, accompanied by two elves. As soon as they see you, the representatives of the elder race jump on their feet, ready to fight.',
+        paths: [
+          { icon: 'sword', label: 'You reach for your weapons to fend them off.', next: 'p34' },
+          { icon: 'fire',  label: 'In order to escape uninjured, you make use of protective spells and signs. You may want to make sure you have some healing herbs close at hand.', next: 'p36' }
+        ]
+      },
 
-  // ── SCENARIO 3B ───────────────────────────────────────────────
-  a2b: {
-    id: 'a2b',
-    title: 'The Test',                  // ← Edit me
-    text: "She holds up her palm and a symbol glows there — the same birthmark on your wrist. Convinced, you follow her into the city's underground, where a dozen rebels wait. Their plan: cause a distraction at the market while you slip into the fortress. It goes almost perfectly. Almost. As you reach the inner sanctum, you find two doors, each bearing a different seal.",  // ← Edit me
-    paths: [
-      { label: 'Choose the door with the sun seal', next: 'final_a' },
-      { label: 'Choose the door with the moon seal', next: 'final_b' }
-    ]
-  },
+      // ── CHAPTER 5 (page 22) ─────────────────────────────────
+      p22: {
+        id: 'p22',
+        title: 'Chapter 5',
+        text: 'Chasing the sylvan, you come close to its hideout. You also notice elves\' footprints on the ground around you – thanks to this, you won\'t let them catch you off guard!\n\nOn the way, one of you thinks back to the encounter with the healer, when they felt slight vibrations of magical nature. And the healer wasn\'t the source of them. Now the feeling borders on certainty. The unusual aura emanated from her apprentice, Lille – the girl probably plays a bigger role in this story than you might expect. It\'s possible that she\'s a prophetess.\n\nYou crawl into the sylvan\'s hideout. Aware of the presence of the elves, you manage to avoid the trap they set for you. When the elves realize that they don\'t stand a chance in the fight against you, they decide to talk.\n\n"These pitiful humans live too short to remember that not so long ago these were our lands," says one of the elves reproachfully. "But we haven\'t forgotten. The time will come when we will descend from the mountains, and the Valley of Flowers will be flooded with human blood."\n\nYou would like to do everything to make absolutely sure that time doesn\'t come too soon. Meanwhile, you all feel a delicate tingling in your heads, as if someone was trying to access your minds.',
+        paths: [
+          { icon: 'fire',   label: 'You try to secretly prepare a protective spell, so as not to succumb to someone\'s telepathic tricks in case the situation takes a turn for the worse.', next: 'p38' },
+          { icon: 'letter', label: 'At the same time, you try to convince the elves that many human generations have passed since they were exiled from the Valley of Flowers. The residents of Lower Posada do not have elven blood on their hands.', next: 'p40' }
+        ]
+      },
 
-  // ── SCENARIO 3C ───────────────────────────────────────────────
-  b2a: {
-    id: 'b2a',
-    title: 'The Cathedral',             // ← Edit me
-    text: "The map guides you unerringly through back streets to the cathedral's service entrance. Inside, you descend beneath the nave and find an ancient chamber. The artifact sits on a stone plinth — exactly where the map said it would be. But someone else is already here. A masked figure with the warlord's insignia. They look up slowly. You each reach for the artifact at the same moment.",  // ← Edit me
-    paths: [
-      { label: 'Fight for the artifact', next: 'final_a' },
-      { label: 'Try to negotiate with the masked figure', next: 'final_b' }
-    ]
-  },
+      // ── CHAPTER 6 (page 26) ─────────────────────────────────
+      p26: {
+        id: 'p26',
+        title: 'Chapter 6',
+        text: 'The book was written in the Elder Futhark, an alphabet that dates back to ancient times. You also quickly realize that the healer\'s apprentice is hiding a secret. The one of you who studied the scriptures most thoroughly discovers that the locals consider Lille to be a prophetess. This knowledge allows you to look at the matter from a different perspective and take further actions.\n\nThe search for the sylvan\'s hideout leads one of you to a disturbing discovery. By an extinguished campfire, there are several feathers trimmed like arrow fletchings. Is the sylvan trying to arm itself?\n\nThis question is answered in the evening when, from across the field at the edge of the village, you see two elves heading towards Lower Posada, bows in hand and full quivers on their shoulders. You go out to meet them.\n\n"You ran us off these lands. Our brothers live in the mountains, hungry and cold. It\'s time you paid for it!" The first arrow is fired to confirm that this is not an empty threat.',
+        paths: [
+          { icon: 'sword', label: 'You attempt to fend off the attack.', next: 'p42' },
+          { icon: 'map',   label: 'At the same time, you try to retreat towards the village, where it will be easier to fetch Lille to the scene. If she really is more than a mere apprentice of the healer, now is the time to reveal herself and prevent bloodshed!', next: 'p44' }
+        ]
+      },
 
-  // ── SCENARIO 3D ───────────────────────────────────────────────
-  b2b: {
-    id: 'b2b',
-    title: 'Allies in the Dark',        // ← Edit me
-    text: 'The stablehand turns out to be more than he seems — a rebel courier who has been smuggling messages for months. He knows every hidden path in the city. Together you wait until midnight, then move. He brings you to the city archives, where the truth of the artifact is written in crumbling parchment. What you read changes everything. There are two ways to end this — and only one of them keeps everyone alive.',  // ← Edit me
-    paths: [
-      { label: 'Follow the dangerous path that saves everyone', next: 'final_a' },
-      { label: 'Take the safer path that saves most', next: 'final_b' }
-    ]
-  },
+      // ── CHAPTER 7 (page 30) — ENDING ────────────────────────
+      p30: {
+        id: 'p30',
+        title: 'Chapter 7',
+        text: 'After a brief discussion, you enter the sylvan\'s hideout, where you meet the creature accompanied by the elves, and before they have time to react, you throw them a map. You explain that you have come in peace and give them a chance to come out of this situation unscathed. The atmosphere is tense. Suddenly, the sylvan lets out a deafening bleat, asking the elves to put down their weapons, or else it\'ll be kicking itself for the rest of its life for helping them, and it\'s well aware of how much a hoof kick hurts. Upon hearing their friend\'s request, the elves agree to look into your offer.\n\nOne of you indicates a place where they can safely survive the upcoming winter. You see gratitude in their eyes, but they\'re not willing to swallow their pride and admit it openly.\n\nDespite their belligerent attitude, the elves decide to listen to what one of you still has to say to them. It\'s because they hear genuine concern in your voice. Perhaps you\'ve managed to instill a little bit of encouragement into their hearts, maybe even hope for a better future. The elves conclude that if there were more noble people like you, the relationship between your races could look entirely different.\n\nYou set off with the two elves and sylvan for the shelter you mentioned. At the crossroads, you wish them luck. In the spring, they will have to search for another safe place in this world. Here you part ways.',
+        paths: [],
+        isEnding: true
+      },
 
-  // ── ENDING A ──────────────────────────────────────────────────
-  final_a: {
-    id: 'final_a',
-    title: 'The Reckoning',             // ← Edit me
-    text: "With a sound like distant thunder, the artifact shatters. A wave of warm light expands outward through the city's stones, through its streets and its people. You feel it pass through you — and something in you settles, like a door finally closing on a long-open wound. The warlord's forces dissolve into confusion. By dawn, the city is free. You never learned what the shard had whispered to you that night. Some days, you wonder. But most days, you don't.",  // ← Edit me
-    paths: [],
-    isEnding: true
-  },
+      // ── CHAPTER 8 (page 32) — ENDING ────────────────────────
+      p32: {
+        id: 'p32',
+        title: 'Chapter 8',
+        text: 'Once you\'ve weighed all the pros and cons, you decide to enter the sylvan\'s hideout. Startled, the elves reach for their weapons, and the sylvan takes to its hooves and hides behind a nearby rock. You try to reason with the elves, explaining that there is no need for a conflict between them and the local villagers. However, the elves have only one response to that – although it may be ancient history for humans, they won\'t forget it so easily.\n\n"Oh, stop it. Personally, I remember very little from yesterday, let alone from whole centuries ago," The sylvan bleats from behind the rock.\n\nThe person from your company who took the lead in the conversation recognizes the elves\' perspective – what for humans is ancient history, for long-lived creatures happened just the day before yesterday. The elves appreciate this understanding. They relax and put down their weapons. As the conversation continues, they agree to leave. They\'ve realized that if they die in battle, they will no longer be able to further their own interests.\n\nOne of you reaches for the map to find a safe way back, leading through the peaks towering above you. It is free from human eyes and offers hope for a way out of this place without the necessity to shed blood.\n\nYou leave the Valley of Flowers feeling uneasy – the sylvan and the elves were not at fault, but obstinacy and envy of the latter towards humans effectively denies the possibility of reaching an agreement. As you ride along, you glance at the peaks towering over the valley with mixed feelings.',
+        paths: [],
+        isEnding: true
+      },
 
-  // ── ENDING B ──────────────────────────────────────────────────
-  final_b: {
-    id: 'final_b',
-    title: 'A Different Story',         // ← Edit me
-    text: "You make your choice — and it is not the one they expected. The artifact does not shatter. Instead it transforms, its light shifting from cold white to the deep amber of a hearthfire. The warlord loses his power, but so does the order that opposed him. In the silence that follows, something new becomes possible. It will take years to build. You find, to your surprise, that you have time.",  // ← Edit me
-    paths: [],
-    isEnding: true
+      // ── CHAPTER 9 (page 34) — ENDING ────────────────────────
+      p34: {
+        id: 'p34',
+        title: 'Chapter 9',
+        text: 'The sylvan feels torn because although it wanted to help the elves, it did not sign up for a fight to the death. It shields you with its own body, narrowly avoiding being, this time quite literally, torn apart. It falls to the ground, bleeding from a cut on its hand, which it raised to protect itself in the last possible moment.\n\nThis sets off a spiral of unfortunate events. The elves charge towards you in a frenzy. Their fierce attack forces you to fight back. One of you defends themselves particularly strenuously. With a few feints, effective pirouettes, and precise comebacks, the attackers fall under the sword swings.\n\nNot all is lost, though, as the sylvan is still breathing! Among you, there is a person deft at using medicinal herbs, which they can skillfully combine with a touch of magic. You can only die once even in the case of goats – but its time has not yet come.\n\nThe bandaged sylvan leaves with you. It\'s done here. The sylvan asks you to take it beyond the Valley\'s border. There it will search for a place where it can play around in peace, without getting involved in other\'s affairs, especially those of a political nature.',
+        paths: [],
+        isEnding: true
+      },
+
+      // ── CHAPTER 10 (page 36) — ENDING ───────────────────────
+      p36: {
+        id: 'p36',
+        title: 'Chapter 10',
+        text: 'The elves turn out to be good swordsmen. However, they are incapable of defeating your magical signs and barriers. Uncertainty creeps into their actions. You try – as much as possible to beat the attackers and keep them alive at the same time. The sylvan raises its hands in surrender. Then, the first of the elves falls wounded to the ground.\n\nOne of you rushes to the injured elf and stops its extensive bleeding with a magical formula.\n\nThen the second elf suddenly turns towards you. It hasn\'t recognized the protective nature of the spell and mistakenly believes it is defending its companion. It attacks you desperately and your companion narrowly avoids a lethal strike.\n\nThe wounded elf reacts immediately and asks to stop this madness. Grateful for saving its life, it stops his companion from further fighting. Now both of them realize this is the end.\n\n"I\'ve been telling you for a long time not to mess with them because it can only lead to trouble," the sylvan puts in its two pennyworth.\n\nThe elves promise to leave, but they also warn against the inevitable – their brethren will soon come down to the Valley of Flowers to reclaim the lands that were once taken from them by humans.\n\nOnce the elves and the sylvan depart, you hesitate whether to confess the truth to the people. In the end, you decide to do so. The news renders them speechless. To them, the exile of the elves belongs to the dim and distant past. They had believed that the conflict with the elves did not concern them, but now things are quite different. Hearing your words, they only gloomily nod their heads.\n\n"If they come, we will be waiting!" you hear a firm reassurance.',
+        paths: [],
+        isEnding: true
+      },
+
+      // ── CHAPTER 11 (page 38) — ENDING ───────────────────────
+      p38: {
+        id: 'p38',
+        title: 'Chapter 11',
+        text: 'Suddenly, at the sylvan\'s hideout, appears someone utterly unexpected – Lille, the healer\'s apprentice. She resonates with power. The elves and the creature kneel before her. So it is true! She helped them by deliberately planting the idea of offering food to the sylvan in the villager\'s minds.\n\n"The Queen of the Fields!" exclaims one of you, realizing who they are dealing with. Recognized, she looks at you with a gracious eye. She was lured here by your protective spell. Now she knows that you don\'t want to harm anyone.\n\nOne of you very skilfully argued your case in the conversation with the elves and managed to sow a seed of doubt in their minds. Now the elves understand that if Lille lived among the villagers, they cannot be so evil. After all, the Lady of the Field wouldn\'t dwell among wicked creatures.\n\nThe elves decide to leave. The sylvan goes with them because – as he claims himself – humans could one day make a scapegoat of it, quite literally. And he would rather live a little longer. It is possible that winter and hunger may one day bring the elves back to the Lower Posada, but until then peace will reign here.\n\nYou leave with the image of Lille revealing the fullness of her majesty still in your mind.',
+        paths: [],
+        isEnding: true
+      },
+
+      // ── CHAPTER 12 (page 40) — ENDING ───────────────────────
+      p40: {
+        id: 'p40',
+        title: 'Chapter 12',
+        text: 'The elves are proud and difficult to persuade to change their minds. Inconsolable, the sylvan shakes his head.\n\n"They\'re as stubborn as mules. Out of the two, I prefer to be a goat, the Queen of the Fields only knows!" One of the elves silences him with a hand gesture.\n\n"Now we will leave without a fight, but I hope." the elf turns to the one of you who took on the task of talking to them, "that when the time comes and we descend from the mountains with the rest of our brethren, we will finally meet on the battlefield. If you wield your sword as skillfully as you use your tongue, it will be a good fight."\n\nThe second elf senses the protective spell used to secure this place. He smiles bitterly, praising the caution of the person who cast it. The Queen of the Fields helps the elves and they wouldn\'t forgive themselves if something happened to her in a confrontation with your company. Seeing that you have done everything to prevent a fight, the elf agrees with its companion to leave without one.\n\nThe elves have left, taking the sylvan with them. You, on the other hand, return to the village where a feast is organized in your honour.\n\n"The deovel did not take away so much from us that we wouldn\'t have anything to offer to you!" Nettly shouts in your ear, excited.',
+        paths: [],
+        isEnding: true
+      },
+
+      // ── CHAPTER 13 (page 42) — ENDING ───────────────────────
+      p42: {
+        id: 'p42',
+        title: 'Chapter 13',
+        text: 'Relying solely on ranged weapons turns out to be insufficient for the elves to gain an advantage over you. You manage to protect yourselves from the arrows and, thanks to your companion\'s cover and a series of successful dodges, one of you quickly finds a way to get close to the attackers. They make a couple of precise strikes. Since the enemies didn\'t surrender, they had no other choice than to finish the job.\n\nYou only manage to find Lille after everything is over. One of you fetches her to the scene. The girl looks at the dead elves with great sadness in her eyes. She gently touches the forehead of the person who brought her here, thankful for their efforts in protecting the villagers from a confrontation with the elves.\n\nThe next day something strange happens – where the bodies of the elves fell, feainnewedd flowers now bloom. You dare not pick them. At a slight distance, from the shade of the grove, emerges the goat-like silhouette of the sylvan. The creature suddenly turns around and disappears into the thicket of the grove. Most probably, it will never show up here again. You leave the valley, and bid farewell to the grateful villagers.',
+        paths: [],
+        isEnding: true
+      },
+
+      // ── CHAPTER 14 (page 44) — ENDING ───────────────────────
+      p44: {
+        id: 'p44',
+        title: 'Chapter 14',
+        text: 'You take cover from the elves\' arrows behind the nearby rock. It looks like you are in trouble.\n\nHaving recognized Lille as the Queen of the Fields, one of you fetches her here, followed by the healer. Apparently, Lille has decided to settle down among humans and take care of the Valley from there. However, she doesn\'t hide from the elves. The Queen fearlessly steps out into the open space.\n\nBefore you can stop her, Lille begins to glow with an extraordinary power. One of the elves, stunned by this view, involuntarily releases an arrow from its bow. It flies straight towards the healer. Luckily, one of you has been on standby all along and manages to deflect the arrow. No harm is done.\n\nThe elves leave, and along with them leaves Lille. The moment you set out from the Lower Posada, the sylvan blocks your path. It introduces itself as Torque and asks whether it could join you. Yesterday\'s events have effectively discouraged it from staying here any longer.\n\nIn the evening, you sit by the campfire, singing bawdy songs, until the deovel finally says goodnight.',
+        paths: [],
+        isEnding: true
+      }
+    }
   }
 
-};
-// ================================================================
-//  END OF STORY DATA — no need to edit below this line
-// ================================================================
+  // ╔══════════════════════════════════════════════════════════╗
+  // ║  TO ADD A NEW TALE                                       ║
+  // ║  Copy the Tale 1 block above (from the opening { to the  ║
+  // ║  closing  },  paste it here with a comma after the last  ║
+  // ║  tale, change the id to 'tale2', fill in your content.   ║
+  // ╚══════════════════════════════════════════════════════════╝
 
+];
+
+// ╔══════════════════════════════════════════════════════════════════╗
+// ║                                                                  ║
+// ║   ██████████████████████████████████████████████████████████     ║
+// ║                                                                  ║
+// ║      STOP HERE — DO NOT EDIT ANYTHING BELOW THIS LINE            ║
+// ║                                                                  ║
+// ║      The rest of this file is the app engine.                    ║
+// ║      Editing it may break the app.                               ║
+// ║                                                                  ║
+// ║   ██████████████████████████████████████████████████████████     ║
+// ║                                                                  ║
+// ╚══════════════════════════════════════════════════════════════════╝
+
+// DEPTH_MAP: maps each chapter id to its step number for the progress bar.
+// Update this whenever you add a tale with a different structure.
 const DEPTH_MAP = {
+  // Tale 1: The Edge of the World
+  p2:  1,
+  p6:  2, p10: 2,
+  p14: 3, p18: 3,
+  p22: 4, p26: 4,
+  p30: 5, p32: 5, p34: 5, p36: 5, p38: 5, p40: 5, p42: 5, p44: 5,
+  // Legacy fallback ids (for future tales using the old naming)
   start: 1,
   a1: 2, b1: 2,
   a2a: 3, a2b: 3, b2a: 3, b2b: 3,
-  final_a: 4, final_b: 4
+  final_a: 4, final_b: 4,
 };
-const TOTAL_STEPS = 4;
+const TOTAL_STEPS = 5;
 
-let currentId = 'start';
-let voices = [];
-let selectedVoice = null;
+// ── ICON LIBRARY ───────────────────────────────────────────────────
+// Inline SVGs for all supported icon keywords. No image files needed.
+const ICONS = {
+  sword: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M14.5 17.5L3 6V3h3l11.5 11.5"/>
+    <path d="M13 19l6-6"/>
+    <path d="M16 16l4 4"/>
+    <path d="M19 21l2-2"/>
+    <path d="M3 19l4-4"/>
+    <path d="M5 21l-2-2"/>
+  </svg>`,
+  letter: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="2" y="4" width="20" height="16" rx="2"/>
+    <path d="M2 7l10 7 10-7"/>
+  </svg>`,
+  fire: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 2c0 0-6 6-6 12a6 6 0 0 0 12 0c0-3-2-5-2-5 0 2-1 3-2 3.5C14 10 12 2 12 2z"/>
+    <path d="M12 22c-1.5-1-3-3-3-5 0-1.5 1-3 2-3.5"/>
+  </svg>`,
+  map: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+    <polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/>
+    <line x1="9" y1="3" x2="9" y2="18"/>
+    <line x1="15" y1="6" x2="15" y2="21"/>
+  </svg>`,
+};
+
+function getIcon(key) {
+  return ICONS[key] || '';
+}
+
+let activeTale    = null;
+let currentId     = 'start';
+
+// ── HOME SCREEN ────────────────────────────────────────────────
+
+function renderHome() {
+  stopReading();
+  activeTale = null;
+  document.getElementById('home-screen').style.display = 'block';
+  document.getElementById('play-screen').style.display = 'none';
+
+  const grid = document.getElementById('tale-grid');
+  grid.innerHTML = '';
+  tales.forEach((tale, idx) => {
+    const card = document.createElement('button');
+    card.className = 'tale-card fade-up';
+    card.style.animationDelay = (idx * 0.07) + 's';
+    card.style.opacity = '0';
+
+    const coverHtml = tale.cover
+      ? `<img class="tale-cover" src="${tale.cover}" alt="${tale.title} cover">`
+      : '';
+
+    card.innerHTML = `
+      <div class="tale-card-bar"></div>
+      <div class="tale-card-body">
+        ${coverHtml}
+        <div class="tale-number">Tale ${idx + 1}</div>
+        <div class="tale-title">${tale.title}</div>
+        ${tale.description ? `<div class="tale-description">${tale.description}</div>` : ''}
+        <span class="tale-arrow">Read →</span>
+      </div>
+    `;
+    card.addEventListener('click', () => startTale(tale));
+    grid.appendChild(card);
+  });
+}
+
+function goHome() { renderHome(); }
+
+// ── START A TALE ───────────────────────────────────────────────
+
+function startTale(tale) {
+  activeTale = tale;
+  document.getElementById('home-screen').style.display = 'none';
+  document.getElementById('play-screen').style.display = 'block';
+  document.getElementById('play-tale-title').textContent = tale.title;
+  // Use first key of chapters object as the entry point
+  const firstChapter = Object.keys(tale.chapters)[0];
+  goTo(firstChapter);
+}
+
+// ── CHAPTER NAVIGATION ────────────────────────────────────────
 
 function buildProgress(id) {
   const bar = document.getElementById('progress-bar');
@@ -623,15 +1439,28 @@ function buildProgress(id) {
 function goTo(id) {
   stopReading();
   currentId = id;
-  const s = scenarios[id];
-  const card = document.getElementById('scenario-card');
+  const s = activeTale.chapters[id];
+
+  const card = document.getElementById('chapter-card');
   card.classList.remove('fade-enter');
   void card.offsetWidth;
   card.classList.add('fade-enter');
 
-  document.getElementById('eyebrow').textContent = 'Scenario ' + (DEPTH_MAP[id] || 1) + ' of ' + TOTAL_STEPS;
+  document.getElementById('eyebrow').textContent   = 'Chapter ' + (DEPTH_MAP[id] || 1) + ' of ' + TOTAL_STEPS;
   document.getElementById('story-title').textContent = s.title;
-  document.getElementById('story-text').textContent = s.text;
+  document.getElementById('story-text').textContent  = s.text;
+
+  const iconWrap = document.getElementById('chapter-icon-wrap');
+  const iconEl   = document.getElementById('chapter-icon');
+  const iconSvg  = s.icon ? getIcon(s.icon) : '';
+  if (iconSvg) {
+    iconEl.innerHTML = iconSvg;
+    iconWrap.style.display = 'flex';
+  } else {
+    iconWrap.style.display = 'none';
+    iconEl.innerHTML = '';
+  }
+
   buildProgress(id);
 
   const ps = document.getElementById('paths-section');
@@ -642,17 +1471,24 @@ function goTo(id) {
   if (s.isEnding) {
     ps.innerHTML = `
       <div class="ending-wrap">
-        <div class="ending-ornament">✦ &nbsp; The story ends here &nbsp; ✦</div>
-        <button class="btn btn-restart" onclick="goTo('start')">↺ &nbsp; Begin Again</button>
+        <div class="ending-ornament">The story ends here</div>
+        <div class="ending-buttons">
+          <button class="btn btn-restart" onclick="goTo('start')">↺ &nbsp; Play Again</button>
+          <button class="btn btn-home" onclick="goHome()">⌂ &nbsp; All Tales</button>
+        </div>
       </div>`;
   } else if (s.paths.length) {
     const letters = ['A', 'B', 'C', 'D'];
     let html = `<div class="paths-heading">Choose your path</div>`;
     s.paths.forEach((p, i) => {
+      const iconHtml = p.icon
+        ? `<span class="path-icon">${getIcon(p.icon)}</span>`
+        : '';
       html += `
         <button class="path-choice" onclick="goTo('${p.next}')">
           <div class="path-inner">
             <span class="path-letter">${letters[i]}</span>
+            ${iconHtml}
             <span class="path-text">${p.label}</span>
           </div>
         </button>`;
@@ -664,24 +1500,21 @@ function goTo(id) {
   setTimeout(readAloud, 400);
 }
 
+// ── COPY TEXT ──────────────────────────────────────────────────
+
 function copyText() {
-  const s = scenarios[currentId];
+  const s = activeTale.chapters[currentId];
   const textToCopy = s.title + '\n\n' + s.text;
   navigator.clipboard.writeText(textToCopy).then(() => {
-    const btn = document.getElementById('copy-btn');
+    const btn   = document.getElementById('copy-btn');
     const label = document.getElementById('copy-label');
     btn.classList.add('copied');
     label.textContent = 'Copied!';
-    setTimeout(() => {
-      btn.classList.remove('copied');
-      label.textContent = 'Copy';
-    }, 2000);
+    setTimeout(() => { btn.classList.remove('copied'); label.textContent = 'Copy'; }, 2000);
   }).catch(() => {
-    // Fallback for browsers without clipboard API
     const ta = document.createElement('textarea');
-    ta.value = s.title + '\n\n' + s.text;
-    ta.style.position = 'fixed';
-    ta.style.opacity = '0';
+    ta.value = textToCopy;
+    ta.style.cssText = 'position:fixed;opacity:0';
     document.body.appendChild(ta);
     ta.select();
     document.execCommand('copy');
@@ -692,62 +1525,280 @@ function copyText() {
   });
 }
 
-function loadVoices() {
-  const all = window.speechSynthesis.getVoices();
-  voices = all.filter(v => v.lang.startsWith('en'));
-  if (!voices.length) voices = all;
+// ── VOICE / TTS ENGINE ─────────────────────────────────────────────
+//  Supports two modes:
+//   • ElevenLabs — used when API key is set and an EL voice is selected
+//   • Browser TTS — fallback, always available
+// ──────────────────────────────────────────────────────────────────
+
+let browserVoices  = [];
+let selectedVoice  = null;   // { type: 'el', id, name }  OR  { type: 'browser', voice }
+let currentAudio   = null;   // HTMLAudioElement for ElevenLabs playback
+
+// Key is read from localStorage — never hardcoded
+function getApiKey() {
+  return localStorage.getItem('el_api_key') || '';
+}
+function elAvailable() {
+  const k = getApiKey();
+  return k.length > 0;
+}
+
+// ── API KEY MODAL ──────────────────────────────────────────────────
+
+function openKeyModal() {
+  const key = getApiKey();
+  document.getElementById('key-input').value = key;
+  document.getElementById('key-clear-btn').style.display = key ? 'inline-flex' : 'none';
+  document.getElementById('key-modal').classList.add('visible');
+  setTimeout(() => document.getElementById('key-input').focus(), 50);
+}
+
+function closeKeyModal() {
+  document.getElementById('key-modal').classList.remove('visible');
+  localStorage.setItem('el_key_dismissed', '1');
+}
+
+function saveKey() {
+  const val = document.getElementById('key-input').value.trim();
+  if (val) {
+    localStorage.setItem('el_api_key', val);
+  } else {
+    localStorage.removeItem('el_api_key');
+  }
+  closeKeyModal();
+  buildVoiceDropdown();  // rebuild dropdown with new key status
+}
+
+function clearKey() {
+  localStorage.removeItem('el_api_key');
+  document.getElementById('key-input').value = '';
+  document.getElementById('key-clear-btn').style.display = 'none';
+  closeKeyModal();
+  buildVoiceDropdown();
+}
+
+// Close modal on overlay click
+document.getElementById('key-modal').addEventListener('click', function(e) {
+  if (e.target === this) closeKeyModal();
+});
+
+// Save on Enter key
+document.getElementById('key-input').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') saveKey();
+  if (e.key === 'Escape') closeKeyModal();
+});
+
+function buildVoiceDropdown() {
   const sel = document.getElementById('voice-select');
   sel.innerHTML = '';
-  let preferred = -1;
-  voices.forEach((v, i) => {
-    const opt = document.createElement('option');
-    opt.value = i;
-    const short = v.name.replace(/\s*\(.*?\)/g, '').substring(0, 26);
-    opt.textContent = short;
-    if (/daniel|samantha|karen|moira|oliver|arthur/i.test(v.name) && preferred < 0) preferred = i;
-    sel.appendChild(opt);
-  });
-  if (preferred >= 0) sel.value = preferred;
-  selectedVoice = voices[sel.value] || voices[0];
+
+  // ── ElevenLabs voices (top group) ──
+  if (elAvailable()) {
+    const grp = document.createElement('optgroup');
+    grp.label = '✦ ElevenLabs';
+    ELEVENLABS_VOICES.forEach((v, i) => {
+      const opt = document.createElement('option');
+      opt.value = 'el:' + v.id;
+      opt.textContent = v.name;
+      grp.appendChild(opt);
+    });
+    sel.appendChild(grp);
+  }
+
+  // ── Browser voices (bottom group) ──
+  const all = window.speechSynthesis.getVoices();
+  browserVoices = all.filter(v => v.lang.startsWith('en'));
+  if (!browserVoices.length) browserVoices = all;
+
+  if (browserVoices.length) {
+    const grp = document.createElement('optgroup');
+    grp.label = 'Browser voices';
+    let preferred = -1;
+    browserVoices.forEach((v, i) => {
+      const opt = document.createElement('option');
+      opt.value = 'browser:' + i;
+      opt.textContent = v.name.replace(/\s*\(.*?\)/g, '').substring(0, 28);
+      if (/daniel|samantha|karen|moira|oliver|arthur/i.test(v.name) && preferred < 0) preferred = i;
+      grp.appendChild(opt);
+    });
+    if (preferred >= 0) {
+      if (!elAvailable()) grp.children[preferred].selected = true;
+    }
+    sel.appendChild(grp);
+  }
+
+  // default: first option (ElevenLabs if available, else browser)
+  voiceChanged();
+  updateBadge();
 }
 
 function voiceChanged() {
-  selectedVoice = voices[document.getElementById('voice-select').value];
+  const sel = document.getElementById('voice-select');
+  const val = sel.value;
+  if (!val) return;
+
+  if (val.startsWith('el:')) {
+    const id   = val.slice(3);
+    const meta = ELEVENLABS_VOICES.find(v => v.id === id) || { id, name: 'ElevenLabs' };
+    selectedVoice = { type: 'el', id: meta.id, name: meta.name };
+  } else {
+    const idx = parseInt(val.split(':')[1]);
+    selectedVoice = { type: 'browser', voice: browserVoices[idx] };
+  }
+  updateBadge();
 }
 
-function readAloud() {
+function updateBadge() {
+  const badge = document.getElementById('el-badge');
+  if (selectedVoice && selectedVoice.type === 'el') {
+    badge.textContent = 'ElevenLabs';
+    badge.className = 'el-badge visible';
+  } else {
+    badge.className = 'el-badge';
+  }
+}
+
+function setBadgeState(state, text) {
+  const badge = document.getElementById('el-badge');
+  badge.textContent = text;
+  badge.className = 'el-badge visible ' + state;
+}
+
+// ── READ ALOUD ─────────────────────────────────────────────────────
+
+function buildReadText() {
+  const s = activeTale.chapters[currentId];
+  let text = s.title + '. ' + s.text;
+
+  // Weave path labels into the narration as story actions
+  if (s.paths && s.paths.length === 2) {
+    text += ` ... ${s.paths[0].label} ... ${s.paths[1].label}.`;
+  }
+
+  return text;
+}
+
+async function readAloud() {
   stopReading();
-  if (!window.speechSynthesis) { alert('Speech synthesis is not supported in this browser. Try Chrome or Edge.'); return; }
-  const s = scenarios[currentId];
-  const utt = new SpeechSynthesisUtterance(s.title + '. ' + s.text);
-  if (selectedVoice) utt.voice = selectedVoice;
+  if (!activeTale) return;
+
+  const text = buildReadText();
+  setReadingUI(true);
+
+  if (selectedVoice && selectedVoice.type === 'el') {
+    await readWithElevenLabs(text);
+  } else {
+    readWithBrowser(text);
+  }
+}
+
+async function readWithElevenLabs(text) {
+  setBadgeState('loading', 'Generating…');
+  try {
+    const response = await fetch(
+      `https://api.elevenlabs.io/v1/text-to-speech/${selectedVoice.id}`, {
+      method: 'POST',
+      headers: {
+        'xi-api-key': getApiKey(),
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        text,
+        model_id: 'eleven_multilingual_v2',
+        voice_settings: { stability: 0.45, similarity_boost: 0.82, style: 0.35, use_speaker_boost: true }
+      })
+    });
+
+    if (!response.ok) {
+      const err = await response.json().catch(() => ({}));
+      throw new Error(err.detail?.message || `API error ${response.status}`);
+    }
+
+    const blob = await response.blob();
+    const url  = URL.createObjectURL(blob);
+    currentAudio = new Audio(url);
+
+    currentAudio.onended = () => {
+      setReadingUI(false);
+      setBadgeState('', 'ElevenLabs');
+      updateBadge();
+      URL.revokeObjectURL(url);
+    };
+    currentAudio.onerror = () => {
+      setReadingUI(false);
+      setBadgeState('error', 'Playback error');
+    };
+
+    setBadgeState('', 'ElevenLabs');
+    updateBadge();
+    currentAudio.play();
+
+  } catch (err) {
+    console.error('ElevenLabs error:', err);
+    setBadgeState('error', 'EL error — using browser');
+
+    // Switch the dropdown to the first available browser voice
+    const sel = document.getElementById('voice-select');
+    const firstBrowserOption = [...sel.options].find(o => o.value.startsWith('browser:'));
+    if (firstBrowserOption) {
+      sel.value = firstBrowserOption.value;
+      voiceChanged();
+    }
+
+    // Keep the UI in the active/reading state and hand off to browser
+    setReadingUI(true);
+    readWithBrowser(buildReadText());
+  }
+}
+
+function readWithBrowser(text) {
+  if (!window.speechSynthesis) {
+    alert('Speech synthesis not supported. Try Chrome or Edge.');
+    setReadingUI(false);
+    return;
+  }
+  const utt = new SpeechSynthesisUtterance(text);
+  if (selectedVoice && selectedVoice.type === 'browser' && selectedVoice.voice) {
+    utt.voice = selectedVoice.voice;
+  }
   utt.rate = 0.92;
   utt.pitch = 1.0;
-  utt.onstart = () => {
-    document.getElementById('speaking-pill').classList.add('visible');
-    document.getElementById('read-btn').disabled = true;
-    document.getElementById('stop-btn').disabled = false;
-  };
-  utt.onend = utt.onerror = () => {
-    document.getElementById('speaking-pill').classList.remove('visible');
-    document.getElementById('read-btn').disabled = false;
-    document.getElementById('stop-btn').disabled = true;
-  };
+  utt.onend = utt.onerror = () => setReadingUI(false);
   window.speechSynthesis.speak(utt);
 }
 
-function stopReading() {
-  window.speechSynthesis && window.speechSynthesis.cancel();
-  document.getElementById('speaking-pill').classList.remove('visible');
-  document.getElementById('read-btn').disabled = false;
-  document.getElementById('stop-btn').disabled = true;
+function setReadingUI(active) {
+  document.getElementById('speaking-pill').classList.toggle('visible', active);
+  document.getElementById('read-btn').disabled = active;
+  document.getElementById('stop-btn').disabled = !active;
 }
+
+function stopReading() {
+  // Stop ElevenLabs audio
+  if (currentAudio) {
+    currentAudio.pause();
+    currentAudio.src = '';
+    currentAudio = null;
+  }
+  // Stop browser TTS
+  window.speechSynthesis && window.speechSynthesis.cancel();
+  setReadingUI(false);
+  updateBadge();
+}
+
+// ── INIT ───────────────────────────────────────────────────────────
+function loadVoices() { buildVoiceDropdown(); }
 
 if (window.speechSynthesis.onvoiceschanged !== undefined) {
   window.speechSynthesis.onvoiceschanged = loadVoices;
 }
 loadVoices();
-goTo('start');
-</script>
+renderHome();
+
+// Show API key prompt on very first visit
+if (!localStorage.getItem('el_api_key') && !localStorage.getItem('el_key_dismissed')) {
+  setTimeout(openKeyModal, 800);
+}</script>
 </body>
 </html>
