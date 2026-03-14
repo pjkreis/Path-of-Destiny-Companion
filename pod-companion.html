@@ -1114,28 +1114,32 @@ const ELEVENLABS_VOICES = [
 // ║   QUICK START                                                    ║
 // ║   ─────────────────────────────────────────────────────────────  ║
 // ║   1. Each tale is one block inside the  tales = [ ... ]  list.   ║
-// ║   2. To add a tale: copy the Tale 2 template block, paste it     ║
-// ║      after the last tale (add a comma between them), change      ║
-// ║      the id to 'tale3', and fill in your titles and text.        ║
-// ║   3. Icons are optional. Use: 'sword' 'letter' 'fire' 'map'      ║
+// ║   2. To add a tale: copy the Tale 1 block, paste it after the    ║
+// ║      last tale (add a comma between them), give it a new id      ║
+// ║      (e.g. 'tale2'), and fill in your content.                   ║
+// ║   3. Add the new tale's chapter ids to DEPTH_MAP (below the      ║
+// ║      STOP line), following the same pattern as Tale 1.           ║
+// ║   4. Icons are optional. Use: 'sword' 'letter' 'fire' 'map'      ║
 // ║                                                                  ║
 // ║   TALE FIELDS                                                    ║
 // ║   ─────────────────────────────────────────────────────────────  ║
-// ║   id          unique key, no spaces  (e.g. 'tale3')              ║
+// ║   id          unique key, no spaces  (e.g. 'tale2')              ║
 // ║   title       name shown on the home screen card                 ║
 // ║   description one-line summary shown on the home card (optional) ║
 // ║   cover       image filename for the home card  (optional)       ║
 // ║                                                                  ║
 // ║   CHAPTER FIELDS (inside each tale's  chapters: { } )            ║
 // ║   ─────────────────────────────────────────────────────────────  ║
+// ║   id          unique key for this chapter (e.g. 'p6')            ║
+// ║               use the page number from the book as the id        ║
 // ║   title       chapter heading                                    ║
 // ║   text        story text — this is what gets read aloud          ║
 // ║   icon        icon shown on the chapter card  (optional)         ║
 // ║               use one of: 'sword' 'letter' 'fire' 'map'          ║
 // ║   paths       the two choices: [ { icon, label, next }, ... ]    ║
+// ║               next → the id of the chapter to go to              ║
 // ║               icon uses the same keywords as above (optional)    ║
-// ║   isEnding    add  isEnding: true  on the two final chapters     ║
-// ║                                                                  ║
+// ║   isEnding    add  isEnding: true  on all ending chapters        ║
 // ║                                                                  ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
@@ -1305,7 +1309,8 @@ const tales = [
   // ║  TO ADD A NEW TALE                                       ║
   // ║  Copy the Tale 1 block above (from the opening { to the  ║
   // ║  closing  },  paste it here with a comma after the last  ║
-  // ║  tale, change the id to 'tale2', fill in your content.   ║
+  // ║  tale, give it a new id (e.g. 'tale2'), fill in your     ║
+  // ║  content, then add its chapter ids to DEPTH_MAP below.   ║
   // ╚══════════════════════════════════════════════════════════╝
 
 ];
@@ -1324,7 +1329,7 @@ const tales = [
 // ╚══════════════════════════════════════════════════════════════════╝
 
 // DEPTH_MAP: maps each chapter id to its step number for the progress bar.
-// Update this whenever you add a tale with a different structure.
+// Add an entry here for each chapter when you add a new tale.
 const DEPTH_MAP = {
   // Tale 1: The Edge of the World
   p2:  1,
@@ -1332,11 +1337,6 @@ const DEPTH_MAP = {
   p14: 3, p18: 3,
   p22: 4, p26: 4,
   p30: 5, p32: 5, p34: 5, p36: 5, p38: 5, p40: 5, p42: 5, p44: 5,
-  // Legacy fallback ids (for future tales using the old naming)
-  start: 1,
-  a1: 2, b1: 2,
-  a2a: 3, a2b: 3, b2a: 3, b2b: 3,
-  final_a: 4, final_b: 4,
 };
 const TOTAL_STEPS = 5;
 
