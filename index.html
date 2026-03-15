@@ -3,30 +3,56 @@
 ║                                                                      ║
 ║   GAME COMPANION — SETUP                                             ║
 ║                                                                      ║
-║   Configure your ElevenLabs voices here.                             ║
-║   The API key is entered by each user in the app itself —            ║
-║   it is saved in their browser and never stored in this file.        ║
+║   Configure your TTS voices here.                                    ║
+║   API keys are entered by each user in the app itself —              ║
+║   they are saved in their browser and never stored in this file.     ║
 ║                                                                      ║
 ╚══════════════════════════════════════════════════════════════════════╝
 -->
 <script>// ════════════════════════════════════════════════════════════════════
 //  ELEVENLABS VOICES
 //
-//  The voices shown in the dropdown under "✦ ElevenLabs".
-//  The first entry in the list is selected by default.
+//  Voices shown in the dropdown under "✦ ElevenLabs".
+//  Requires a free ElevenLabs account: elevenlabs.io
+//  Only premade voices work on the free tier.
 //
 //  HOW TO FIND A VOICE ID:
-//  → Go to elevenlabs.io → Voices → click any voice → the ID is in
-//    the URL:  elevenlabs.io/app/voice-lab/edit/VOICE_ID_HERE
+//  → elevenlabs.io → Voices → click a voice → copy the ID from the URL
 //
-//  id   → the Voice ID from ElevenLabs (string)
-//  name → the label shown in the dropdown (anything you like)
+//  id   → Voice ID from ElevenLabs
+//  name → label shown in the dropdown
 // ════════════════════════════════════════════════════════════════════
 
 const ELEVENLABS_VOICES = [
-  { id: 'N2lVS1w4EtoT3dr4eOWO', name: 'Callum — hoarse'     },  // ← default
-  { id: 'pNInz6obpgDQGcFmaJgB', name: 'Adam - american'     },
+  { id: 'N2lVS1w4EtoT3dr4eOWO', name: 'Callum — hoarse'     },
+  { id: 'pNInz6obpgDQGcFmaJgB', name: 'Adam — deep'         },
   { id: 'onwK4e9ZLuTAKqWW03F9', name: 'Daniel — news'       },
+  // Add more voices here following the same pattern:
+  // { id: 'VOICE_ID', name: 'Label in dropdown' },
+];
+
+// ════════════════════════════════════════════════════════════════════
+//  SPEECHIFY VOICES
+//
+//  Voices shown in the dropdown under "✦ Speechify".
+//  Requires a free Speechify account: console.speechify.ai
+//  50,000 characters/month on the free tier.
+//
+//  HOW TO FIND VOICE IDs:
+//  → console.speechify.ai → Voices, or use the names below directly.
+//  Popular built-in voices: george, henry, carly, sophia, myles, miles
+//
+//  id   → Voice ID from Speechify (e.g. 'george')
+//  name → label shown in the dropdown
+// ════════════════════════════════════════════════════════════════════
+
+const SPEECHIFY_VOICES = [
+  { id: 'george',  name: 'George'  },
+  { id: 'henry',   name: 'Henry'   },
+  { id: 'myles',   name: 'Myles'   },
+  { id: 'miles',   name: 'Miles'   },
+  { id: 'carly',   name: 'Carly'   },
+  { id: 'sophia',  name: 'Sophia'  },
   // Add more voices here following the same pattern:
   // { id: 'VOICE_ID', name: 'Label in dropdown' },
 ];
@@ -406,15 +432,6 @@ const ELEVENLABS_VOICES = [
 
         .chapter-card-inner {
             padding: 1.75rem 2rem 1.75rem;
-        }
-
-        .chapter-eyebrow {
-            font-family: var(--font-title);
-            font-size: 9px;
-            letter-spacing: 0.3em;
-            text-transform: uppercase;
-            color: var(--red);
-            margin-bottom: 0.4rem;
         }
 
         .chapter-title {
@@ -1081,7 +1098,6 @@ const ELEVENLABS_VOICES = [
                         </svg>
                         <span id="copy-label">Copy</span>
                     </button>
-                    <div class="chapter-eyebrow" id="eyebrow">chapter 1</div>
                     <div class="chapter-title" id="story-title"></div>
                     <div class="chapter-divider"><span class="chapter-divider-glyph">— ✦ —</span></div>
                     <div class="chapter-icon-wrap" id="chapter-icon-wrap" style="display:none">
@@ -1121,16 +1137,32 @@ const ELEVENLABS_VOICES = [
             <div class="modal-body">
                 <div class="modal-title">Voice Settings</div>
                 <div class="modal-desc">
-                    Enter your ElevenLabs API key to unlock high-quality narration voices.
-                    Get one free at <a href="https://elevenlabs.io" target="_blank">elevenlabs.io</a>
-                    → Profile → API Key.<br><br>
-                    Your settings are saved only in this browser and never shared.
+                    Add an API key from ElevenLabs or Speechify to unlock
+                    high-quality narration voices. Both offer free tiers.
+                    Your keys are saved only in this browser and never shared.
                 </div>
 
                 <div class="modal-section">
-                    <label class="modal-label" for="key-input">ElevenLabs API Key</label>
-                    <input class="modal-input" id="key-input" type="password"
+                    <label class="modal-label" for="el-key-input">
+                        ElevenLabs API Key
+                        <span style="font-weight:normal;letter-spacing:0">
+                            — <a href="https://elevenlabs.io" target="_blank">elevenlabs.io</a>
+                        </span>
+                    </label>
+                    <input class="modal-input" id="el-key-input" type="password"
                         placeholder="sk_xxxxxxxxxxxxxxxxxxxxxxxx" autocomplete="off" spellcheck="false"
+                        oninput="refreshModalVoiceDropdown()">
+                </div>
+
+                <div class="modal-section">
+                    <label class="modal-label" for="sf-key-input">
+                        Speechify API Key
+                        <span style="font-weight:normal;letter-spacing:0">
+                            — <a href="https://console.speechify.ai" target="_blank">console.speechify.ai</a>
+                        </span>
+                    </label>
+                    <input class="modal-input" id="sf-key-input" type="password"
+                        placeholder="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" autocomplete="off" spellcheck="false"
                         oninput="refreshModalVoiceDropdown()">
                 </div>
 
@@ -1140,11 +1172,25 @@ const ELEVENLABS_VOICES = [
                 </div>
 
                 <div class="modal-actions">
-                    <button class="modal-btn modal-btn-clear" id="key-clear-btn" onclick="clearKey()" style="display:none">Remove key</button>
+                    <button class="modal-btn modal-btn-clear" id="key-clear-btn" onclick="clearKey()" style="display:none">Remove keys</button>
                     <button class="modal-btn" onclick="closeKeyModal()">Cancel</button>
                     <button class="modal-btn modal-btn-primary" onclick="saveKey()">Save</button>
                 </div>
-                <div class="modal-hint">Leave the key blank to use browser voices only</div>
+                <div class="modal-hint">Leave both keys blank to use browser voices only</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ERROR MODAL -->
+    <div class="modal-overlay" id="error-modal">
+        <div class="modal">
+            <div class="modal-bar"></div>
+            <div class="modal-body">
+                <div class="modal-title" id="error-modal-title">Narration Error</div>
+                <div class="modal-desc" id="error-modal-body" style="margin-bottom:0"></div>
+                <div class="modal-actions" style="margin-top:1.25rem">
+                    <button class="modal-btn modal-btn-primary" onclick="closeErrorModal()">Close</button>
+                </div>
             </div>
         </div>
     </div>
@@ -1380,11 +1426,10 @@ const DEPTH_MAP = {
   // Tale 1: The Edge of the World
   p2:  1,
   p6:  2, p10: 2,
-  p14: 3, p18: 3,
-  p22: 4, p26: 4,
-  p30: 5, p32: 5, p34: 5, p36: 5, p38: 5, p40: 5, p42: 5, p44: 5,
+  p14: 3, p18: 3, p22: 3, p26: 3,
+  p30: 4, p32: 4, p34: 4, p36: 4, p38: 4, p40: 4, p42: 4, p44: 4,
 };
-const TOTAL_STEPS = 5;
+const TOTAL_STEPS = 4;
 
 // ── ICON LIBRARY ───────────────────────────────────────────────────
 // Inline SVGs for all supported icon keywords. No image files needed.
@@ -1492,7 +1537,6 @@ function goTo(id) {
   void card.offsetWidth;
   card.classList.add('fade-enter');
 
-  document.getElementById('eyebrow').textContent   = 'Chapter ' + (DEPTH_MAP[id] || 1) + ' of ' + TOTAL_STEPS;
   document.getElementById('story-title').textContent = s.title;
   document.getElementById('story-text').innerHTML = s.text
     .split('\n\n')
@@ -1546,7 +1590,7 @@ function goTo(id) {
   } else {
     ps.innerHTML = '';
   }
-  setTimeout(readAloud, 400);
+
 }
 
 // ── COPY TEXT ──────────────────────────────────────────────────
@@ -1581,39 +1625,36 @@ function copyText() {
 // ──────────────────────────────────────────────────────────────────
 
 let browserVoices  = [];
-let selectedVoice  = null;   // { type: 'el', id, name }  OR  { type: 'browser', voice }
-let currentAudio   = null;   // HTMLAudioElement for ElevenLabs playback
+let selectedVoice  = null;   // { type: 'el'|'sf'|'browser', id?, name?, voice? }
+let currentAudio   = null;   // HTMLAudioElement for EL/SF playback
 
-// Key is read from localStorage — never hardcoded
-function getApiKey() {
-  return localStorage.getItem('el_api_key') || '';
-}
-function elAvailable() {
-  const k = getApiKey();
-  return k.length > 0;
-}
+// ── KEY HELPERS ────────────────────────────────────────────────────
+
+function getElKey() { return localStorage.getItem('el_api_key') || ''; }
+function getSfKey() { return localStorage.getItem('sf_api_key') || ''; }
+function elAvailable() { return getElKey().length > 0; }
+function sfAvailable() { return getSfKey().length > 0; }
 
 // ── API KEY MODAL ──────────────────────────────────────────────────
 
 function openKeyModal() {
-  const key = getApiKey();
-  document.getElementById('key-input').value = key;
-  document.getElementById('key-clear-btn').style.display = key ? 'inline-flex' : 'none';
+  document.getElementById('el-key-input').value = getElKey();
+  document.getElementById('sf-key-input').value = getSfKey();
+  const hasAnyKey = getElKey() || getSfKey();
+  document.getElementById('key-clear-btn').style.display = hasAnyKey ? 'inline-flex' : 'none';
   refreshModalVoiceDropdown();
   document.getElementById('key-modal').classList.add('visible');
-  setTimeout(() => document.getElementById('key-input').focus(), 50);
+  setTimeout(() => document.getElementById('el-key-input').focus(), 50);
 }
 
-// Rebuilds the voice dropdown inside the modal based on whatever
-// is currently typed in the key field (before saving).
 function refreshModalVoiceDropdown() {
-  const sel     = document.getElementById('modal-voice-select');
-  const keyVal  = document.getElementById('key-input').value.trim();
-  const saved   = localStorage.getItem('el_default_voice') || '';
+  const sel    = document.getElementById('modal-voice-select');
+  const elKey  = document.getElementById('el-key-input').value.trim();
+  const sfKey  = document.getElementById('sf-key-input').value.trim();
+  const saved  = localStorage.getItem('el_default_voice') || '';
   sel.innerHTML = '';
 
-  // ElevenLabs voices — only if a key is present in the field
-  if (keyVal) {
+  if (elKey) {
     const grp = document.createElement('optgroup');
     grp.label = '✦ ElevenLabs';
     ELEVENLABS_VOICES.forEach(v => {
@@ -1626,7 +1667,19 @@ function refreshModalVoiceDropdown() {
     sel.appendChild(grp);
   }
 
-  // Browser voices — always shown
+  if (sfKey) {
+    const grp = document.createElement('optgroup');
+    grp.label = '✦ Speechify';
+    SPEECHIFY_VOICES.forEach(v => {
+      const opt = document.createElement('option');
+      opt.value = 'sf:' + v.id;
+      opt.textContent = v.name;
+      if (saved === 'sf:' + v.id) opt.selected = true;
+      grp.appendChild(opt);
+    });
+    sel.appendChild(grp);
+  }
+
   const all = window.speechSynthesis.getVoices();
   const bv  = all.filter(v => v.lang.startsWith('en'));
   const voices = bv.length ? bv : all;
@@ -1643,7 +1696,6 @@ function refreshModalVoiceDropdown() {
     sel.appendChild(grp);
   }
 
-  // If nothing matched the saved value, fall back to first option
   if (!sel.value && sel.options.length) sel.options[0].selected = true;
 }
 
@@ -1653,18 +1705,13 @@ function closeKeyModal() {
 }
 
 function saveKey() {
-  const keyVal   = document.getElementById('key-input').value.trim();
+  const elVal    = document.getElementById('el-key-input').value.trim();
+  const sfVal    = document.getElementById('sf-key-input').value.trim();
   const voiceVal = document.getElementById('modal-voice-select').value;
 
-  if (keyVal) {
-    localStorage.setItem('el_api_key', keyVal);
-  } else {
-    localStorage.removeItem('el_api_key');
-  }
-
-  if (voiceVal) {
-    localStorage.setItem('el_default_voice', voiceVal);
-  }
+  elVal ? localStorage.setItem('el_api_key', elVal) : localStorage.removeItem('el_api_key');
+  sfVal ? localStorage.setItem('sf_api_key', sfVal) : localStorage.removeItem('sf_api_key');
+  if (voiceVal) localStorage.setItem('el_default_voice', voiceVal);
 
   closeKeyModal();
   buildVoiceDropdown();
@@ -1672,8 +1719,10 @@ function saveKey() {
 
 function clearKey() {
   localStorage.removeItem('el_api_key');
+  localStorage.removeItem('sf_api_key');
   localStorage.removeItem('el_default_voice');
-  document.getElementById('key-input').value = '';
+  document.getElementById('el-key-input').value = '';
+  document.getElementById('sf-key-input').value = '';
   document.getElementById('key-clear-btn').style.display = 'none';
   refreshModalVoiceDropdown();
   closeKeyModal();
@@ -1686,17 +1735,22 @@ document.getElementById('key-modal').addEventListener('click', function(e) {
 });
 
 // Save on Enter key
-document.getElementById('key-input').addEventListener('keydown', function(e) {
+document.getElementById('el-key-input').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') saveKey();
+  if (e.key === 'Escape') closeKeyModal();
+});
+document.getElementById('sf-key-input').addEventListener('keydown', function(e) {
   if (e.key === 'Enter') saveKey();
   if (e.key === 'Escape') closeKeyModal();
 });
 
+// ── VOICE DROPDOWN ─────────────────────────────────────────────────
+
 function buildVoiceDropdown() {
-  const sel     = document.getElementById('voice-select');
-  const saved   = localStorage.getItem('el_default_voice') || '';
+  const sel   = document.getElementById('voice-select');
+  const saved = localStorage.getItem('el_default_voice') || '';
   sel.innerHTML = '';
 
-  // ── ElevenLabs voices (top group) — only when key is set ──
   if (elAvailable()) {
     const grp = document.createElement('optgroup');
     grp.label = '✦ ElevenLabs';
@@ -1710,7 +1764,19 @@ function buildVoiceDropdown() {
     sel.appendChild(grp);
   }
 
-  // ── Browser voices (bottom group) ──
+  if (sfAvailable()) {
+    const grp = document.createElement('optgroup');
+    grp.label = '✦ Speechify';
+    SPEECHIFY_VOICES.forEach(v => {
+      const opt = document.createElement('option');
+      opt.value = 'sf:' + v.id;
+      opt.textContent = v.name;
+      if (saved === 'sf:' + v.id) opt.selected = true;
+      grp.appendChild(opt);
+    });
+    sel.appendChild(grp);
+  }
+
   const all = window.speechSynthesis.getVoices();
   browserVoices = all.filter(v => v.lang.startsWith('en'));
   if (!browserVoices.length) browserVoices = all;
@@ -1728,9 +1794,7 @@ function buildVoiceDropdown() {
     sel.appendChild(grp);
   }
 
-  // If nothing matched the saved value, select first available
   if (!sel.value && sel.options.length) sel.options[0].selected = true;
-
   voiceChanged();
   updateBadge();
 }
@@ -1744,20 +1808,23 @@ function voiceChanged() {
     const id   = val.slice(3);
     const meta = ELEVENLABS_VOICES.find(v => v.id === id) || { id, name: 'ElevenLabs' };
     selectedVoice = { type: 'el', id: meta.id, name: meta.name };
+  } else if (val.startsWith('sf:')) {
+    const id   = val.slice(3);
+    const meta = SPEECHIFY_VOICES.find(v => v.id === id) || { id, name: 'Speechify' };
+    selectedVoice = { type: 'sf', id: meta.id, name: meta.name };
   } else {
     const idx = parseInt(val.split(':')[1]);
     selectedVoice = { type: 'browser', voice: browserVoices[idx] };
   }
 
-  // Persist the selection as the new default
   localStorage.setItem('el_default_voice', val);
   updateBadge();
 }
 
 function updateBadge() {
   const badge = document.getElementById('el-badge');
-  if (selectedVoice && selectedVoice.type === 'el') {
-    badge.textContent = 'ElevenLabs';
+  if (selectedVoice && (selectedVoice.type === 'el' || selectedVoice.type === 'sf')) {
+    badge.textContent = selectedVoice.type === 'el' ? 'ElevenLabs' : 'Speechify';
     badge.className = 'el-badge visible';
   } else {
     badge.className = 'el-badge';
@@ -1775,12 +1842,9 @@ function setBadgeState(state, text) {
 function buildReadText() {
   const s = activeTale.chapters[currentId];
   let text = s.title + '. ' + s.text;
-
-  // Weave path labels into the narration as story actions
   if (s.paths && s.paths.length === 2) {
     text += ` ... ${s.paths[0].label} ... ${s.paths[1].label}.`;
   }
-
   return text;
 }
 
@@ -1793,6 +1857,8 @@ async function readAloud() {
 
   if (selectedVoice && selectedVoice.type === 'el') {
     await readWithElevenLabs(text);
+  } else if (selectedVoice && selectedVoice.type === 'sf') {
+    await readWithSpeechify(text);
   } else {
     readWithBrowser(text);
   }
@@ -1801,70 +1867,170 @@ async function readAloud() {
 async function readWithElevenLabs(text) {
   setBadgeState('loading', 'Generating…');
 
-  // Create and unlock the Audio object immediately while still inside
-  // the user-gesture context — mobile browsers require this before any
-  // async work happens, otherwise autoplay is blocked.
+  // Unlock audio on mobile before any await
   currentAudio = new Audio();
-  currentAudio.play().catch(() => {}); // silent unlock tap
+  currentAudio.play().catch(() => {});
 
   try {
     const response = await fetch(
       `https://api.elevenlabs.io/v1/text-to-speech/${selectedVoice.id}`, {
       method: 'POST',
       headers: {
-        'xi-api-key': getApiKey(),
+        'xi-api-key': getElKey(),
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
         text,
-        model_id: 'eleven_multilingual_v2',
+        model_id: 'eleven_flash_v2_5',
         voice_settings: { stability: 0.45, similarity_boost: 0.82, style: 0.35, use_speaker_boost: true }
       })
     });
 
     if (!response.ok) {
-      const err = await response.json().catch(() => ({}));
-      throw new Error(err.detail?.message || `API error ${response.status}`);
+      const body = await response.json().catch(() => ({}));
+      const status = response.status;
+      const detail = body?.detail || {};
+      const statusCode = detail.status || '';
+      const message    = detail.message || body?.message || '';
+
+      let title = 'ElevenLabs Error';
+      let desc;
+
+      if (status === 401) {
+        title = 'Invalid API Key';
+        desc  = 'Your ElevenLabs API key was not recognised. Please check it in Voice Settings and make sure you copied it correctly.';
+      } else if (status === 403 || statusCode === 'invalid_api_key' || message.toLowerCase().includes('library voices')) {
+        title = 'Voice Not Available';
+        desc  = 'This voice requires a paid ElevenLabs plan, or is a library voice not accessible on your current tier. Try switching to a premade voice (Adam, Brian, Daniel, Callum, etc.) in Voice Settings.';
+      } else if (statusCode === 'quota_exceeded' || message.toLowerCase().includes('quota') || message.toLowerCase().includes('credits')) {
+        title = 'Out of Credits';
+        desc  = `Your ElevenLabs account has run out of characters for this month. ${message ? '<br><br><em>' + message + '</em>' : ''}`;
+      } else if (statusCode === 'max_character_limit_exceeded') {
+        title = 'Text Too Long';
+        desc  = 'This chapter\'s text exceeds the ElevenLabs character limit per request. Try copying the text and pasting it into your preferred text-to-speech tool.';
+      } else if (status === 429) {
+        const reason = message.toLowerCase().includes('concurrent') ? 'Too many simultaneous requests.' : 'Too many requests in a short time.';
+        title = 'Rate Limit Reached';
+        desc  = `${reason} Please wait a moment and try again.`;
+      } else if (status >= 500) {
+        title = 'ElevenLabs Service Error';
+        desc  = 'ElevenLabs is experiencing issues. Please try again in a few minutes.';
+      } else {
+        desc = message || `Unexpected error (HTTP ${status}). Please try again.`;
+      }
+
+      showErrorModal(title, desc);
+      setReadingUI(false);
+      updateBadge();
+      return;
     }
 
     const blob = await response.blob();
     const url  = URL.createObjectURL(blob);
-
-    // Re-use the already-unlocked Audio object — load the real audio into it
     currentAudio.src = url;
-
-    currentAudio.onended = () => {
-      setReadingUI(false);
-      setBadgeState('', 'ElevenLabs');
-      updateBadge();
-      URL.revokeObjectURL(url);
-    };
-    currentAudio.onerror = () => {
-      setReadingUI(false);
-      setBadgeState('error', 'Playback error');
-    };
-
+    currentAudio.onended = () => { setReadingUI(false); updateBadge(); URL.revokeObjectURL(url); };
+    currentAudio.onerror = () => { setReadingUI(false); setBadgeState('error', 'Playback error'); };
     setBadgeState('', 'ElevenLabs');
     updateBadge();
     currentAudio.play();
 
   } catch (err) {
     console.error('ElevenLabs error:', err);
-    setBadgeState('error', 'EL error — using browser');
-
-    // Switch the dropdown to the first available browser voice
-    const sel = document.getElementById('voice-select');
-    const firstBrowserOption = [...sel.options].find(o => o.value.startsWith('browser:'));
-    if (firstBrowserOption) {
-      sel.value = firstBrowserOption.value;
-      voiceChanged();
-    }
-
-    // Keep the UI in the active/reading state and hand off to browser
-    setReadingUI(true);
-    readWithBrowser(buildReadText());
+    showErrorModal('Connection Failed', 'Could not reach ElevenLabs. Check your internet connection and try again.');
+    setReadingUI(false);
+    updateBadge();
   }
 }
+
+async function readWithSpeechify(text) {
+  setBadgeState('loading', 'Generating…');
+
+  // Unlock audio on mobile before any await
+  currentAudio = new Audio();
+  currentAudio.play().catch(() => {});
+
+  try {
+    const response = await fetch(
+      'https://api.sws.speechify.com/v1/audio/stream', {
+      method: 'POST',
+      headers: {
+        'Authorization': 'Bearer ' + getSfKey(),
+        'Content-Type': 'application/json',
+        'Accept': 'audio/mpeg'
+      },
+      body: JSON.stringify({
+        input: text,
+        voice_id: selectedVoice.id,
+        model: 'simba-english',
+        audio_format: 'mp3'
+      })
+    });
+
+    if (!response.ok) {
+      const body = await response.json().catch(() => ({}));
+      const status  = response.status;
+      const message = body?.message || body?.error || '';
+
+      let title = 'Speechify Error';
+      let desc;
+
+      if (status === 401) {
+        title = 'Invalid API Key';
+        desc  = 'Your Speechify API key was not recognised. Please check it in Voice Settings.';
+      } else if (status === 403) {
+        title = 'Access Denied';
+        desc  = 'Your Speechify account does not have permission to use this voice or feature. Check your plan at console.speechify.ai.';
+      } else if (status === 429) {
+        title = 'Rate Limit Reached';
+        desc  = 'Too many requests. The free Speechify plan allows 1 request per second. Please wait a moment and try again.';
+      } else if (status === 400) {
+        title = 'Bad Request';
+        desc  = message || 'The request was invalid. The text may be too long or the voice ID may be incorrect.';
+      } else if (status >= 500) {
+        title = 'Speechify Service Error';
+        desc  = 'Speechify is experiencing issues. Please try again in a few minutes.';
+      } else {
+        desc = message || `Unexpected error (HTTP ${status}). Please try again.`;
+      }
+
+      showErrorModal(title, desc);
+      setReadingUI(false);
+      updateBadge();
+      return;
+    }
+
+    const blob = await response.blob();
+    const url  = URL.createObjectURL(blob);
+    currentAudio.src = url;
+    currentAudio.onended = () => { setReadingUI(false); updateBadge(); URL.revokeObjectURL(url); };
+    currentAudio.onerror = () => { setReadingUI(false); setBadgeState('error', 'Playback error'); };
+    setBadgeState('', 'Speechify');
+    updateBadge();
+    currentAudio.play();
+
+  } catch (err) {
+    console.error('Speechify error:', err);
+    showErrorModal('Connection Failed', 'Could not reach Speechify. Check your internet connection and try again.');
+    setReadingUI(false);
+    updateBadge();
+  }
+}
+
+// ── ERROR MODAL ────────────────────────────────────────────────────
+
+function showErrorModal(title, desc) {
+  document.getElementById('error-modal-title').textContent = title;
+  document.getElementById('error-modal-body').innerHTML    = desc;
+  document.getElementById('error-modal').classList.add('visible');
+}
+
+function closeErrorModal() {
+  document.getElementById('error-modal').classList.remove('visible');
+}
+
+document.getElementById('error-modal').addEventListener('click', function(e) {
+  if (e.target === this) closeErrorModal();
+});
 
 function readWithBrowser(text) {
   if (!window.speechSynthesis) {
@@ -1873,12 +2039,9 @@ function readWithBrowser(text) {
     return;
   }
 
-  // iOS Safari bug: speechSynthesis gets stuck after the first use
-  // unless we cancel and resume it before each new utterance.
+  // iOS Safari bug fix
   window.speechSynthesis.cancel();
-  if (window.speechSynthesis.paused) {
-    window.speechSynthesis.resume();
-  }
+  if (window.speechSynthesis.paused) window.speechSynthesis.resume();
 
   const utt = new SpeechSynthesisUtterance(text);
   if (selectedVoice && selectedVoice.type === 'browser' && selectedVoice.voice) {
@@ -1887,8 +2050,6 @@ function readWithBrowser(text) {
   utt.rate = 0.92;
   utt.pitch = 1.0;
   utt.onend = utt.onerror = () => setReadingUI(false);
-
-  // Small delay needed on iOS for the cancel/resume to settle
   setTimeout(() => window.speechSynthesis.speak(utt), 50);
 }
 
@@ -1899,13 +2060,11 @@ function setReadingUI(active) {
 }
 
 function stopReading() {
-  // Stop ElevenLabs audio
   if (currentAudio) {
     currentAudio.pause();
     currentAudio.src = '';
     currentAudio = null;
   }
-  // Stop browser TTS
   window.speechSynthesis && window.speechSynthesis.cancel();
   setReadingUI(false);
   updateBadge();
@@ -1920,8 +2079,8 @@ if (window.speechSynthesis.onvoiceschanged !== undefined) {
 loadVoices();
 renderHome();
 
-// Show API key prompt on very first visit
-if (!localStorage.getItem('el_api_key') && !localStorage.getItem('el_key_dismissed')) {
+// Show voice settings prompt on very first visit
+if (!localStorage.getItem('el_api_key') && !localStorage.getItem('sf_api_key') && !localStorage.getItem('el_key_dismissed')) {
   setTimeout(openKeyModal, 800);
 }</script>
 </body>
